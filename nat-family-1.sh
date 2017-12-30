@@ -37,6 +37,10 @@ IP_TEST=(
 192.168.0.56
 )
 
+IP_PUBLIC=(
+192.168.12.134
+)
+
 #extra_ip of server of debian sources.list & others
 #LIBRARY 163.29.36.96 203.64.154.21
 IP_EXTRA=(
@@ -153,7 +157,8 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	iptables -Z
 	iptables -P INPUT   DROP
 	iptables -P OUTPUT  ACCEPT
-	iptables -P FORWARD ACCEPT
+	#iptables -P FORWARD ACCEPT
+	iptables -P FORWARD DROP
 
 	# 2. 清除 NAT table 的規則吧！
     iptables -F -t nat
@@ -255,38 +260,48 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	fi
 fi
 
-if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
-	echo "[BLOCK AUSTIN]..."
+if [ "$BLOCK_AUSTIN" != "TRUE" ]; then
 	for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 	do 
-		iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
+		iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACEEPT
 		if [ "$VERBOSE_MODE" == "TRUE" ]; then
-		echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP"
+		echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACCEPT"
 		fi		
 	done
+	else
+	echo "[BLOCK AUSTIN]..."
 fi
 		
-if [ "$BLOCK_ROSE" == "TRUE" ]; then
-	echo "[BLOCK ROSE]..."
+if [ "$BLOCK_ROSE" != "TRUE" ]; then
 	for ((i=0; i<${#IP_ROSE[@]}; i++))
 	do 
-		iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
+		iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACEEPT
 		if [ "$VERBOSE_MODE" == "TRUE" ]; then
-		echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP"
+		echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACEEPT"
 		fi		
 	done
+	else
+	echo "[BLOCK ROSE]..."
 fi
 
-if [ "$BLOCK_TEST" == "TRUE" ]; then
-	echo "[BLOCK TESTING]..." ; sleep 1
+if [ "$BLOCK_TEST" != "TRUE" ]; then
 	for ((i=0; i<${#IP_TEST[@]}; i++))
 	do 
-		iptables -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
+		iptables -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j ACCEPT
 		echo
 	done
+	else
+	echo "[BLOCK TESTING]..." 
 fi
 
-	echo "[ENABLE NAT]..." ;sleep 1
+#ALLOW PUBLIC
+	for ((i=0; i<${#IP_PUBLIC[@]}; i++))
+	do 
+		iptables -A FORWARD -s ${IP_PUBLIC[$i]}  -o $EXTIF -j ACCEPT
+		echo
+	done
+
+	echo "[ENABLE NAT]..." 
 	iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	
 	if [ "$VERBOSE_MODE" == "TRUE" ]; then
 	echo "iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	"
