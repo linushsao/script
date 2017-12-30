@@ -125,18 +125,9 @@ sleep 1
 wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/now.conf &
 sleep 1
 #dhclient -v ${EXTIF_1} &
-
-
-#
-fi
-
-# IF SYSTEM RESET is needed
-if [ "${CHECK_NETWORK}" != "" ];then
-echo "" > home/linus/log/CHECK_NETWORK
 fi
 
 if  [ "$RESET_MODE" == "TRUE" ]; then
-
 	# 第一部份，針對本機的防火牆設定！##########################################
 	# 1. 先設定好核心的網路功能：
 	#	echo "1" > /proc/sys/net/ipv4/tcp_syncookies
@@ -147,9 +138,8 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	#	for i in /proc/sys/net/ipv4/conf/*/{accept_source_route,accept_redirects,send_redirects}; do
 	#			echo "0" > $i
 	#	done
-
 	# 2. 清除規則、設定預設政策及開放 lo 與相關的設定值
-	echo "[IPTABLES init]...";sleep 1
+	echo "[IPTABLES init]..."
 	
 	PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/bin; export PATH
 	iptables -F
@@ -157,8 +147,8 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	iptables -Z
 	iptables -P INPUT   DROP
 	iptables -P OUTPUT  ACCEPT
-	#iptables -P FORWARD ACCEPT
-	iptables -P FORWARD DROP
+	iptables -P FORWARD ACCEPT
+    echo "1" > /proc/sys/net/ipv4/ip_forward
 
 	# 2. 清除 NAT table 的規則吧！
     iptables -F -t nat
@@ -170,8 +160,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 
 	iptables -A INPUT -i lo -j ACCEPT
 	iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-    echo "1" > /proc/sys/net/ipv4/ip_forward
     
     # 完全 Drop PING 的請求
     #iptable -A INPUT -p icmp --icmp-type echo-request -j DROP
@@ -230,34 +218,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	# iptables -A INPUT -p TCP -i $EXTIF --dport  80 --sport 1024:65534 -j ACCEPT # WWW
 	# iptables -A INPUT -p TCP -i $EXTIF --dport 110 --sport 1024:65534 -j ACCEPT # POP3
 	# iptables -A INPUT -p TCP -i $EXTIF --dport 443 --sport 1024:65534 -j ACCEPT # HTTPS
-
-	if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
-	echo "[ENABLE TC_MARK]..."
-
-	# uploads
-	# 設定上傳方面，先利用 iptables 給封包貼標籤，再交由 fw 過濾器進行過濾
- 
-	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto dns -j MARK --set-mark 10
-	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto smtp -j MARK --set-mark 20
-	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto http -j MARK --set-mark 30
-
-	iptables -t mangle -A PREROUTING -s $IP_AUSTIN_PC -j MARK --set-mark 40
-	iptables -t mangle -A PREROUTING -s $IP_ROSE_PC   -j MARK --set-mark 50
-	#	iptables -t mangle -A PREROUTING -s 192.168.1.2 -j MARK --set-mark 50
-	#	iptables -t mangle -A PREROUTING -s 192.168.1.3 -j MARK --set-mark 60
-
-	# downloads
-	# 下載方面
-
-	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto dns -j MARK --set-mark 10
-	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto smtp -j MARK --set-mark 20
-	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto http -j MARK --set-mark 30
-
-	iptables -t mangle -A POSTROUTING -d $IP_AUSTIN_PC -j MARK --set-mark 40
-	iptables -t mangle -A POSTROUTING -d $IP_ROSE_PC -j MARK --set-mark 50
-	#	iptables -t mangle -A POSTROUTING -d 192.168.1.2 -j MARK --set-mark 50
-	#	iptables -t mangle -A POSTROUTING -d 192.168.1.3 -j MARK --set-mark 60 
-	fi
 fi
 
 if [ "$BLOCK_AUSTIN" != "TRUE" ]; then
@@ -309,10 +269,33 @@ fi
 	echo "iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	"
 	fi		
 
-if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
+#----TC/
+	if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
 	echo "[ENABLE TC]..."
 
-#----TC/
+	# uploads
+	# 設定上傳方面，先利用 iptables 給封包貼標籤，再交由 fw 過濾器進行過濾
+ 
+	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto dns -j MARK --set-mark 10
+	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto smtp -j MARK --set-mark 20
+	#iptables -t mangle -A PREROUTING -s 192.168.1.6 -m layer7 --l7proto http -j MARK --set-mark 30
+
+	iptables -t mangle -A PREROUTING -s $IP_AUSTIN_PC -j MARK --set-mark 40
+	iptables -t mangle -A PREROUTING -s $IP_ROSE_PC   -j MARK --set-mark 50
+	#	iptables -t mangle -A PREROUTING -s 192.168.1.2 -j MARK --set-mark 50
+	#	iptables -t mangle -A PREROUTING -s 192.168.1.3 -j MARK --set-mark 60
+
+	# downloads
+	# 下載方面
+
+	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto dns -j MARK --set-mark 10
+	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto smtp -j MARK --set-mark 20
+	#iptables -t mangle -A POSTROUTING -d 192.168.1.6 -m layer7 --l7proto http -j MARK --set-mark 30
+
+	iptables -t mangle -A POSTROUTING -d $IP_AUSTIN_PC -j MARK --set-mark 40
+	iptables -t mangle -A POSTROUTING -d $IP_ROSE_PC -j MARK --set-mark 50
+	#	iptables -t mangle -A POSTROUTING -d 192.168.1.2 -j MARK --set-mark 50
+	#	iptables -t mangle -A POSTROUTING -d 192.168.1.3 -j MARK --set-mark 60 
 
 # 清除 $EXTIF 所有佇列規則
 #tc qdisc del dev $EXTIF root 2>/dev/null
@@ -400,7 +383,6 @@ tc filter add dev $INIF parent 10: protocol ip prio 100 handle 60 fw  classid 10
 tc filter add dev $INIF parent 10: protocol ip prio 100 handle 70 fw  classid 10:70	
 	
 #----TC
-
 fi
 
 echo "++++++++++++++++++++++++++++++++[INIT END]"
