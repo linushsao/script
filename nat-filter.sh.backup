@@ -1,0 +1,226 @@
+#!/bin/bash
+
+#BASIC CONFIGURE
+FILTER_ROSE="--block-rose" 
+FILTER_AUSTIN="--block-austin"
+FILTER_MODE="TRUE" #TRUE mean BLOCK AUSTIN & ROSE
+GAME_SWITCH="" #TRUE means opennet from minetest
+TC_MODE="--enable-tc"
+EXTRA_MODE="" #TRUE mean ignore time
+
+TEST_MODE="TRUE"
+CHECK_FLAG=""
+
+NETHOURS=(
+1 19 30 59
+2 19 30 59
+3 19 30 59
+4 19 30 59
+5 19 30 59
+1 20 0 15
+2 20 0 15
+3 20 0 15
+4 20 0 15
+5 20 0 15
+1 20 30 59
+2 20 30 59
+3 20 30 59
+4 20 30 59
+5 20 30 59
+1 21 0 30
+2 21 0 30
+3 21 0 30
+4 21 0 30
+5 21 0 30
+6 8 30 59
+6 9 0 59
+6 10 0 59
+6 11 0 30
+6 15 0 59
+6 16 0 59
+7 8 30 59
+7 9 0 59
+7 10 0 59
+7 11 0 30
+7 15 0 59
+7 16 0 59)
+
+WEEK_H_DAY="1 2 3 4 5"
+WEEK_H_HOUR="20"
+WEEK_H_MIN="15"
+
+WEEK_DAY="1 2 3 4 5"
+WEEK_HOUR="21"
+WEEK_MIN="30"
+
+WEEKEND_DAY="6 7"
+WEEKEND_HOUR="9 10 15 16 "
+WEEKEND_MIN="59"
+
+DTIME=`date +%F@%R`
+NOW=`date +%u`
+HOUR=`date +%H`
+MIN=`date +%M`
+
+echo ""
+echo "++++++++++++++++++++++++++++++++[FILTER START]"
+echo ""
+
+EXTRA=`cat /home/linus/script/extra_mode`
+if [ "$(echo -e "${EXTRA}" | tr -d '[:space:]')" != "" ]; then
+	EXTRA_MODE="TRUE"
+	else
+	echo "[DISABLE EXTRA_MODE ]..."
+fi
+
+#check param
+echo "[CHECKING PARAM]..."
+for var in "$@"
+do
+    #echo "$var"
+    if [ "$var" == "--disable-test" ]
+		then
+		echo "[configure:DISABLE_TEST]"
+		TEST_MODE=""
+		elif [ "$var" == "--enable-gameswitch" ]
+		then
+		echo "[configure:ENABLE_GAMESWITCH]"
+		GAME_SWITCH="TRUE"
+		elif [ "$var" == "--enable-extra" ]
+		then
+		echo "[configure:ENABLE_ExtraMODE]"
+		EXTRA_MODE="TRUE"
+		else
+		echo "Wrong param : " $var
+		exit 0
+	fi
+done
+
+echo "CHECK MONDAY-FRIDAY's HOMEWORK TIME"
+for day in $WEEK_H_DAY #Monday to Friday
+	do
+	if [ "$day" == "$NOW" ]; then
+		for hour in $WEEK_H_HOUR #compare hours
+			do
+			if [ `expr "$hour" - "$HOUR"` == "0" ]; then
+					for ((i=1;i<="$WEEK_H_MIN";i++)); 
+					do
+						if [ `expr "$i" - "$MIN"` == "0" ]; then
+							echo "###MATCH###"
+							FILTER_MODE=""
+						fi
+					done
+			fi
+		done
+	fi
+done
+
+echo "CHECK MONDAY-FRIDAY"
+for day in $WEEK_DAY #Monday to Friday
+	do
+	if [ "$day" == "$NOW" ]; then
+		for hour in $WEEK_HOUR #compare hours
+			do
+			if [ `expr "$hour" - "$HOUR"` == "0" ]; then
+					for ((i=1;i<="$WEEK_MIN";i++)); 
+					do
+						if [ `expr "$i" - "$MIN"` == "0" ]; then
+							echo "###MATCH###"
+							FILTER_MODE=""
+						fi
+					done
+			fi
+		done
+	fi
+done
+
+echo "CHECK FRIDAY-SUNDAY"
+for day in $WEEKEND_DAY #FRIday to SUNday
+	do
+	if [ `expr "$day" - "$NOW"` == "0" ]; then
+			for hour in $WEEKEND_HOUR #compare hours
+				do
+				if [ `expr "$hour" - "$HOUR"` == "0" ]; then
+						for ((i=1;i<="$WEEKEND_MIN";i++)); 
+						do
+							if [ `expr "$i" - "$MIN"` == "0" ]; then
+							echo "###MATCH###"
+							FILTER_MODE=""
+							fi
+						done
+				fi
+			done
+	fi
+done
+
+	# ready to decreasing network time of austin or rose
+	echo "[STARTING TO SET NETWORK FILTER FOR AUSTIN&ROSE]..."
+
+	NAME="ROSE AUSTIN"
+
+	echo "[CHECKING if ROSE&AUSTIN have ONELINE TIME]..."
+	#check if austin&rose have net time
+	for name in $NAME
+		do
+		echo "[CHECKING if NC exist]..."
+		if ! [ -f /home/linus/script/nc_$name ]; then
+			echo "0" > /home/linus/script/nc_$name
+		fi
+
+		COIN=`cat /home/linus/script/nc_"$name"`
+	
+		if [ "$COIN" != "0" ] && [ "$FILTER_MODE" != "TRUE" ]
+			then
+			if [ "$GAME_SWITCH" == "" ] || [ -f /home/linus/script/switch_"$name" ]
+			then
+				OP="1"
+				COUNT=`expr "$COIN" - "$OP"` #check evey 1 minute
+				echo "$COUNT" > /home/linus/script/nc_"$name"
+				if [ "$name" == "AUSTIN" ]; then
+					FILTER_AUSTIN=""
+					elif [ "$name" == "ROSE" ]; then
+					FILTER_ROSE=""
+				fi
+			fi
+		
+			else
+			echo "[NOT DOING NC COUNTING]..."
+		fi
+		echo $name
+		cat /home/linus/script/nc_$name
+	done
+	
+
+if [ "$FILTER_ROSE" != "" ] && [ "$FILTER_AUSTIN" != "" ] 
+then
+	echo "[DISABLE TC MODE]..."
+	TC_MODE="" #if austin&rose could not be online,it's not necessary to enable tc
+fi
+
+#ready to set command.
+echo "[STARTING TO CONFIURE FILTER PARAM]..."
+PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$TC_MODE
+
+if ! [ -f /home/linus/script/para ]; then
+    touch /home/linus/script/para
+	echo "[CREATE NEW EMPTY PARA file]..."
+fi
+OLD_PARA=`cat /home/linus/script/para`
+
+
+if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
+	echo "[TEST MODE | CURRENT PARA CONF AS FELLOWING]..."
+	echo $PARA
+	exit 0
+	elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | tr -d '[:space:]')" ]; then
+	echo "NOT execute ,just show the same param: "$PARA
+	echo $DTIME ": DUPLUCATE PARAM = |" $PARA "|" >> /home/linus/script/net-filter.log
+	exit 0
+	else
+	/home/linus/script/nat-family.sh $PARA
+	echo  $PARA > /home/linus/script/para
+	echo $DTIME ": EXECUTE PARAM = |" $PARA "|" >> /home/linus/script/net-filter.log
+fi
+
+echo "++++++++++++++++++++++++++++++++[FILTER END]"
+

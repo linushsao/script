@@ -1,0 +1,8 @@
+
+
+exit 0 
+
+MARK=10
+
+iptables -t mangle -A PREROUTING -s 192.168.0.56 -j MARK --set-mark $MARK 
+iptables -t mangle -A POSTROUTING -d 192.168.0.56 -j MARK --set-mark $MARK

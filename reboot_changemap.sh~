@@ -1,0 +1,15 @@
+
+#exit 0
+
+D=`date +%F`
+
+cd /home/linus/log
+mkdir -p ./backup/$D
+mv *.log /home/linus/log/backup/$D/
+
+#/home/linus/script/changemap.sh
+
+killall screen
+killall -INT minetestserver
+
+/home/linus/script/delete_oldplayer-mars.sh

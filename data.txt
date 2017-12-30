@@ -1,0 +1,1 @@
+root      1192  0.0  0.0  17652  2068 ?        Ss   15:08   0:00 SCREEN -t SkyBLoCK -d -m /home/linus/Downloads/src/minetest_0.4.13/bin/minetestserver --worldname skyislands --port 30012 --logfile /home/linus/log/skyblock.log --config /home/linus/.minetest/games/sky_islands/minetest.conf
