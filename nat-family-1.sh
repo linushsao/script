@@ -263,7 +263,7 @@ fi
 if [ "$BLOCK_AUSTIN" != "TRUE" ]; then
 	for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 	do 
-		iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACEEPT
+		iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACCEPT
 		if [ "$VERBOSE_MODE" == "TRUE" ]; then
 		echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACCEPT"
 		fi		
@@ -275,9 +275,9 @@ fi
 if [ "$BLOCK_ROSE" != "TRUE" ]; then
 	for ((i=0; i<${#IP_ROSE[@]}; i++))
 	do 
-		iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACEEPT
+		iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACCEPT
 		if [ "$VERBOSE_MODE" == "TRUE" ]; then
-		echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACEEPT"
+		echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACCEPT"
 		fi		
 	done
 	else
@@ -298,7 +298,9 @@ fi
 	for ((i=0; i<${#IP_PUBLIC[@]}; i++))
 	do 
 		iptables -A FORWARD -s ${IP_PUBLIC[$i]}  -o $EXTIF -j ACCEPT
-		echo
+		if [ "$VERBOSE_MODE" == "TRUE" ]; then
+		echo "iptables -A FORWARD -s ${IP_PUBLIC[$i]}  -o $EXTIF -j ACCEPT"
+		fi		
 	done
 
 	echo "[ENABLE NAT]..." 
