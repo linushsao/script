@@ -122,7 +122,7 @@ create_ap $INIF $EXTIF Linuslab-AP 0726072652
 #connect to Yafinus
 killall wpa_supplicant
 sleep 1
-wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/script/now.conf &
+wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/now.conf &
 sleep 1
 #dhclient -v ${EXTIF_1} &
 
