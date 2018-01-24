@@ -31,8 +31,8 @@ for ((i=0; i<${#NETHOURS[@]}; i++))
 do 
 		D1=${NETHOURS[$i]} 
 		if [ `expr "$D1" - "$HOUR"` == "0" ]; then
-			start_minetest_game.sh nc kill
-			start_minetest_game.sh hsao kill
+			/home/linus/script/start_minetest_game.sh nc kill
+			/home/linus/script/start_minetest_game.sh hsao kill
 			#echo "terminate minetestserver"
 			exit 0 
 		fi
