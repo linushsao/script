@@ -32,6 +32,7 @@ done
 
 if [ "$CHECK" == "" ];then
 	killall hostapd
+	echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
 fi
 
 exit 0
