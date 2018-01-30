@@ -10,5 +10,6 @@ systemctl start haveged
 killall hostapd
 hostapd -dd /etc/hostapd/hostapd.conf
 
+killall dhcpd
 dhcpd wlp0s29u1u3
 
