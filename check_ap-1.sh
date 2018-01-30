@@ -3,7 +3,7 @@
 
 #exit 0
 
-PARAM="hostapd"
+PARAM="hostapd	"
 CHECK=""
 
 c1=`pidof ${PARAM}`
@@ -28,6 +28,8 @@ do
 			/home/linus/script/nat-family-1.sh --enable-hardreset
 			echo "TURN ON Ap..."
 			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
+			else
+			echo "$DTIME :HOSTAPD is ALIVE" >> /home/linus/log/check_ap.log
 			fi
 		fi
 done
