@@ -175,7 +175,6 @@ check_nethours () {
 			echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
 			else
 			check_ifap
-			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 	fi
 }
 
