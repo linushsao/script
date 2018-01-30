@@ -2,7 +2,7 @@
 
 #exit 0
 
-ifconfig wlp3s0 192.168.0.1
+ifconfig wlp0s29u1u3 192.168.0.1
 
 systemctl stop haveged 
 systemctl start haveged 
