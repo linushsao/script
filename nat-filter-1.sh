@@ -10,6 +10,7 @@ TEST_MODE="TRUE"
 RESET_MODE="--enable-reset"
 HARDRESET_MODE=""
 FORCE_MODE=""
+AP_NAME="Linuslab-AP"
 
 #time sheet,children could use adsl-net during these time(0~24).
 #day hour minute-start minute-end
@@ -143,6 +144,17 @@ done
 
 #[ALL functions]
 #-------------------------------------------------------------
+
+#check if ap available & luanch ap
+check_ifap() {
+
+	c1=`iwlist wlp3s0 scanning | grep ${AP_NAME}`
+		if [ "$c1" == "" ];then
+			/home/linus/script/run-nat-filter-reset-1.sh
+			echo "TURN ON Ap..."
+		fi
+}
+
 #function to check if current time is online time.
 check_nethours () {
 	if [ "$D1" == "$NOW" ]; then
@@ -152,9 +164,14 @@ check_nethours () {
 						if [ `expr "$ii" - "$MIN"` == "0" ]; then
 							echo "###MATCH###"
 							FILTER_MODE=""
+							check_ifap
 						fi
 					done
 			fi
+	fi
+	
+	if [ "$FILTER_MODE" != "" ]; then
+			killall hostapd
 	fi
 }
 
