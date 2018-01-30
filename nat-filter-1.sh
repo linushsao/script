@@ -165,7 +165,6 @@ check_nethours () {
 						if [ `expr "$ii" - "$MIN"` == "0" ]; then
 							echo "###MATCH###"
 							FILTER_MODE=""
-							check_ifap
 						fi
 					done
 			fi
@@ -174,6 +173,9 @@ check_nethours () {
 	if [ "$FILTER_MODE" != "" ]; then
 			killall hostapd
 			echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
+			else
+			check_ifap
+			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 	fi
 }
 
