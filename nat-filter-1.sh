@@ -150,7 +150,7 @@ check_ifap() {
 
 	c1=`iwlist wlp3s0 scanning | grep ${AP_NAME}`
 		if [ "$c1" == "" ];then
-			/home/linus/script/run-nat-filter-reset-1.sh
+			/home/linus/script/nat-family-1.sh --enable-hardreset
 			echo "TURN ON Ap..."
 		fi
 }
