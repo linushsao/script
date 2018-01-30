@@ -144,18 +144,6 @@ done
 
 #[ALL functions]
 #-------------------------------------------------------------
-
-#check if ap available & luanch ap
-check_ifap() {
-
-	c1=`iwlist wlp3s0 scanning | grep ${AP_NAME}`
-		if [ "$c1" == "" ];then
-			/home/linus/script/nat-family-1.sh --enable-hardreset
-			echo "TURN ON Ap..."
-			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
-		fi
-}
-
 #function to check if current time is online time.
 check_nethours () {
 	if [ "$D1" == "$NOW" ]; then
@@ -264,14 +252,6 @@ do
 		check_time_limited
 	fi
 done
-
-#check for AP if available
-if [ "$FILTER_MODE" != "" ]; then
-		killall hostapd
-		echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
-		else
-		check_ifap
-fi
 
 # ready to decreasing network time of austin or rose
 	NAME="ROSE AUSTIN"
