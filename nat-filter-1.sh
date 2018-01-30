@@ -152,6 +152,7 @@ check_ifap() {
 		if [ "$c1" == "" ];then
 			/home/linus/script/nat-family-1.sh --enable-hardreset
 			echo "TURN ON Ap..."
+			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 		fi
 }
 
@@ -172,6 +173,7 @@ check_nethours () {
 	
 	if [ "$FILTER_MODE" != "" ]; then
 			killall hostapd
+			echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
 	fi
 }
 
