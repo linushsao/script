@@ -3,10 +3,10 @@
 
 #exit 0
 
-PARAM="Linuslab-AP"
+PARAM="hostapd"
 CHECK=""
 
-c1=`iwlist wlp3s0 scanning | grep ${PARAM}`
+c1=`pidof ${PARAM}`
 echo $c1
 
 #NETHOURS=(22 23 0 1 2 3 4 5 6 7 12 13 18 19)
