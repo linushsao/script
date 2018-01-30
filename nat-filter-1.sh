@@ -169,13 +169,6 @@ check_nethours () {
 					done
 			fi
 	fi
-	
-	if [ "$FILTER_MODE" != "" ]; then
-			killall hostapd
-			echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
-			else
-			check_ifap
-	fi
 }
 
 #check_allow_service
@@ -272,6 +265,13 @@ do
 	fi
 done
 
+#check for AP if available
+if [ "$FILTER_MODE" != "" ]; then
+		killall hostapd
+		echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
+		else
+		check_ifap
+fi
 
 # ready to decreasing network time of austin or rose
 	NAME="ROSE AUSTIN"
