@@ -25,7 +25,7 @@ do
 		if [ `expr "$D1" - "$HOUR"` == "0" ]; then
 			CHECK="TRUE"
 			if [ "$c1" == "" ];then
-			/home/linus/script/nat-family-1.sh --enable-hardreset
+			/home/linus/script/nat-family-1.sh --enable-hardreset --enable-reset
 			echo "TURN ON Ap..."
 			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 			else
