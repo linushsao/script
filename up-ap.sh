@@ -2,14 +2,42 @@
 
 #exit 0
 
-ifconfig wlp0s29u1u3 192.168.0.1
+EXTIF="wlp3s0"
+EXTIF_1="wlp0s20u2"
+INIF="wlp0s29u1u3"
+INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
+
+ifconfig $INIF 192.168.0.1
 
 systemctl stop haveged 
 systemctl start haveged 
 killall dhcpd
-dhcpd wlp0s29u1u3
+dhcpd $INIF
 killall hostapd
 hostapd -dd /etc/hostapd/hostapd.conf
+
+	PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/bin; export PATH
+	iptables -F
+	iptables -X
+	iptables -Z
+	iptables -P INPUT   DROP
+	iptables -P OUTPUT  ACCEPT
+	iptables -P FORWARD ACCEPT
+	
+	# 2. 清除 NAT table 的規則吧！
+    iptables -F -t nat
+    iptables -X -t nat
+    iptables -Z -t nat
+    iptables -t nat -P PREROUTING  ACCEPT
+    iptables -t nat -P POSTROUTING ACCEPT
+    iptables -t nat -P OUTPUT      ACCEPT
+
+	iptables -A INPUT -i lo -j ACCEPT
+	iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+    echo "1" > /proc/sys/net/ipv4/ip_forward
+    iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	
+
 
 
 
