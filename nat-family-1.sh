@@ -117,7 +117,17 @@ ifconfig ${EXTIF}  up
 ifconfig ${EXTIF_1}  up
 
 #create softAP
-create_ap $INIF $EXTIF Linuslab-AP 0726072652
+#create_ap $INIF $EXTIF Linuslab-AP 0726072652
+
+ifconfig $INIF 192.168.0.1
+
+systemctl stop haveged
+systemctl start haveged
+killall dhcpd;sleep 1
+dhcpd $INIF
+killall hostapd;sleep 1
+hostapd -dd /etc/hostapd/hostapd.conf
+
 
 #connect to Yafinus
 killall wpa_supplicant
