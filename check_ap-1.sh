@@ -3,7 +3,7 @@
 
 #exit 0
 
-PARAM="hostapd	"
+PARAM="hostapd"
 CHECK=""
 
 c1=`pidof ${PARAM}`
