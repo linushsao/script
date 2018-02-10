@@ -141,14 +141,14 @@ fi
 if  [ "$RESET_MODE" == "TRUE" ]; then
 	# 第一部份，針對本機的防火牆設定！##########################################
 	# 1. 先設定好核心的網路功能：
-	#	echo "1" > /proc/sys/net/ipv4/tcp_syncookies
-	#	echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
-	#	for i in /proc/sys/net/ipv4/conf/*/{rp_filter,log_martians}; do
-	#			echo "1" > $i
-	#	done
-	#	for i in /proc/sys/net/ipv4/conf/*/{accept_source_route,accept_redirects,send_redirects}; do
-	#			echo "0" > $i
-	#	done
+		echo "1" > /proc/sys/net/ipv4/tcp_syncookies
+		echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+		for i in /proc/sys/net/ipv4/conf/*/{rp_filter,log_martians}; do
+				echo "1" > $i
+		done
+		for i in /proc/sys/net/ipv4/conf/*/{accept_source_route,accept_redirects,send_redirects}; do
+				echo "0" > $i
+		done
 	# 2. 清除規則、設定預設政策及開放 lo 與相關的設定值
 	echo "[IPTABLES init]..."
 	
