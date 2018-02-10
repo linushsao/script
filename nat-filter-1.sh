@@ -185,7 +185,7 @@ check_ap () {
 
 #check_allow_service
 check_servies () {
-#	a=""
+	a=""
 #	if [ "$a" == "" ] && [ "$FILTER_MODE" == ""  ];then
 #		echo "[START TINYPROXY]..."
 #		systemctl start tinyproxy
