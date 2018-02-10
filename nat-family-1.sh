@@ -139,146 +139,23 @@ hostapd -dd /etc/hostapd/hostapd.conf
 fi
 
 if  [ "$RESET_MODE" == "TRUE" ]; then
-	# 第一部份，針對本機的防火牆設定！##########################################
-	# 1. 先設定好核心的網路功能：
-		echo "1" > /proc/sys/net/ipv4/tcp_syncookies
-		echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
-		for i in /proc/sys/net/ipv4/conf/*/{rp_filter,log_martians}; do
-				echo "1" > $i
-		done
-		for i in /proc/sys/net/ipv4/conf/*/{accept_source_route,accept_redirects,send_redirects}; do
-				echo "0" > $i
-		done
-	# 2. 清除規則、設定預設政策及開放 lo 與相關的設定值
-	echo "[IPTABLES init]..."
-	
-	PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/bin; export PATH
-	iptables -F
-	iptables -X
-	iptables -Z
-	iptables -P INPUT   DROP
-	iptables -P OUTPUT  ACCEPT
-	iptables -P FORWARD ACCEPT
-    echo "1" > /proc/sys/net/ipv4/ip_forward
 
-	# 2. 清除 NAT table 的規則吧！
-    iptables -F -t nat
-    iptables -X -t nat
-    iptables -Z -t nat
-    iptables -t nat -P PREROUTING  ACCEPT
-    iptables -t nat -P POSTROUTING ACCEPT
-    iptables -t nat -P OUTPUT      ACCEPT
+	IPTABLES=/sbin/iptables
+	$IPTABLES -F
+	$IPTABLES -F -t nat
+	$IPTABLES -X
 
-	iptables -A INPUT -i lo -j ACCEPT
-	iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-    
-    # 完全 Drop PING 的請求
-    #iptable -A INPUT -p icmp --icmp-type echo-request -j DROP
-    # 限制不正常的 TCP handshank
-    #iptables -A INPUT -p tcp --sym -m limit 1/s --limit-burst 3 -j RETURN
-    
- #  iptables -A INPUT -i $INIF -j ACCEPT
-	for ((i=0; i<${#IP_EXTRA[@]}; i++))
-	do 
-		iptables -A FORWARD -o $EXTIF -d ${IP_EXTRA[$i]} -j ACCEPT
-	done
-	
-	iptables -A INPUT -p TCP -i $INIF   -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $INIF   -j ACCEPT # 
+	$IPTABLES -P INPUT ACCEPT
+	$IPTABLES -P OUTPUT ACCEPT
+	$IPTABLES -P FORWARD ACCEPT
 
-	# 3. 啟動額外的防火牆 script 模組
-	#if [ -f /usr/local/virus/iptables/iptables.deny ]; then
-    #    sh /usr/local/virus/iptables/iptables.deny
-	#fi
+	modprobe ip_conntrack
+	modprobe iptable_nat
+	modprobe ip_conntrack_ftp
+	modprobe ip_nat_ftp
 
-	# 4. 允許某些類型的 ICMP 封包進入
-	AICMP="0 3 3/4 4 11 12 14 16 18"
-	for tyicmp in $AICMP
-		do
-		iptables -A INPUT -i $EXTIF -p icmp --icmp-type $tyicmp -j ACCEPT
-	done
-
-	# 第二部份，針對後端主機的防火牆設定！###############################
-	# 1. 先載入一些有用的模組
- #   modules="ip_tables iptable_nat ip_nat_ftp ip_nat_irc ip_conntrack ip_conntrack_ftp ip_conntrack_irc"
- #   for mod in $modules
- #   do
- #       testmod=`lsmod | grep "^${mod} " | awk '{print $1}'`
- #       if [ "$testmod" == "" ]; then
- #             modprobe $mod
- #       fi
- #   done
-
-    
-	# 5. 允許某些服務的進入，請依照你自己的環境開啟
-	iptables -A INPUT -p TCP -i $EXTIF --dport  443 -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $EXTIF --dport  443 -j ACCEPT # 
-	iptables -A INPUT -p TCP -i $EXTIF --dport  80 -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $EXTIF --dport  80 -j ACCEPT # 
-	iptables -A INPUT -p TCP -i $EXTIF --dport  20 -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $EXTIF --dport  20 -j ACCEPT # 
-	iptables -A INPUT -p TCP -i $EXTIF --dport  21 -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $EXTIF --dport  21 -j ACCEPT # 
-	iptables -A INPUT -p TCP -i $EXTIF --dport  22 -j ACCEPT # 
-	iptables -A INPUT -p UDP -i $EXTIF --dport  22 -j ACCEPT # 
-
-
-	# iptables -A INPUT -p TCP -i $EXTIF --dport  25 --sport 1024:65534 -j ACCEPT # SMTP
-	# iptables -A INPUT -p UDP -i $EXTIF --dport  53 --sport 1024:65534 -j ACCEPT # DNS
-	# iptables -A INPUT -p TCP -i $EXTIF --dport  53 --sport 1024:65534 -j ACCEPT # DNS
-	# iptables -A INPUT -p TCP -i $EXTIF --dport  80 --sport 1024:65534 -j ACCEPT # WWW
-	# iptables -A INPUT -p TCP -i $EXTIF --dport 110 --sport 1024:65534 -j ACCEPT # POP3
-	# iptables -A INPUT -p TCP -i $EXTIF --dport 443 --sport 1024:65534 -j ACCEPT # HTTPS
-
-
-	if [ "$BLOCK_AUSTIN" != "TRUE" ]; then
-		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
-		do 
-			iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACCEPT
-			if [ "$VERBOSE_MODE" == "TRUE" ]; then
-			echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j ACCEPT"
-			fi		
-		done
-		else
-		echo "[BLOCK AUSTIN]..."
-	fi
-		
-	if [ "$BLOCK_ROSE" != "TRUE" ]; then
-		for ((i=0; i<${#IP_ROSE[@]}; i++))
-		do 
-			iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACCEPT
-			if [ "$VERBOSE_MODE" == "TRUE" ]; then
-			echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j ACCEPT"
-			fi		
-		done
-		else
-		echo "[BLOCK ROSE]..."
-	fi
-
-	if [ "$BLOCK_TEST" != "TRUE" ]; then
-		for ((i=0; i<${#IP_TEST[@]}; i++))
-		do 
-			iptables -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j ACCEPT
-			echo
-		done
-		else
-		echo "[BLOCK TESTING]..." 
-	fi
-
-#ALLOW PUBLIC
-	for ((i=0; i<${#IP_PUBLIC[@]}; i++))
-	do 
-		iptables -A FORWARD -s ${IP_PUBLIC[$i]}  -o $EXTIF -j ACCEPT
-		if [ "$VERBOSE_MODE" == "TRUE" ]; then
-		echo "iptables -A FORWARD -s ${IP_PUBLIC[$i]}  -o $EXTIF -j ACCEPT"
-		fi		
-	done
-
-	echo "[ENABLE NAT]..." 
-	iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	
-	if [ "$VERBOSE_MODE" == "TRUE" ]; then
-	echo "iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	"
-	fi		
+	echo 1 > /proc/sys/net/ipv4/ip_forward
+	$IPTABLES -t nat -A POSTROUTING -j MASQUERADE		
 
 fi
 
