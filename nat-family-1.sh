@@ -130,11 +130,12 @@ hostapd -dd /etc/hostapd/hostapd.conf
 
 
 #connect to Yafinus
-killall wpa_supplicant
-sleep 1
-wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/now.conf &
-sleep 1
+#killall wpa_supplicant
+#sleep 1
+#wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/now.conf &
+#sleep 1
 #dhclient -v ${EXTIF_1} &
+
 fi
 
 if  [ "$RESET_MODE" == "TRUE" ]; then
