@@ -160,13 +160,14 @@ check_nethours () {
 					done
 			fi
 	fi
-
-	if [ "$FILTER_MODE" == "" ];then
+	
+	if [ "$FILTER_MODE" != "" ];then
 		killall hostapd
 		echo "TURN OFF HOSTAPD"
 		echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
 		echo "" > ${PATH_LOG}/AP_ID
 	fi
+
 }
 
 check_ap () {
