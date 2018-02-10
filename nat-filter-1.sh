@@ -154,20 +154,12 @@ check_nethours () {
 					do
 						if [ `expr "$ii" - "$MIN"` == "0" ]; then
 							echo "###MATCH###"
-							check_ap
 							FILTER_MODE=""
+							check_ap
 						fi
 					done
 			fi
 	fi
-	
-	if [ "$FILTER_MODE" != "" ];then
-		killall hostapd
-		echo "TURN OFF HOSTAPD"
-		echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
-		echo "" > ${PATH_LOG}/AP_ID
-	fi
-
 }
 
 check_ap () {
@@ -181,7 +173,6 @@ check_ap () {
 			else
 			echo "$DTIME :HOSTAPD is ALIVE" >> /home/linus/log/check_ap.log
 			fi
-
 }
 
 #check_allow_service
@@ -278,6 +269,7 @@ do
 	fi
 done
 
+
 # ready to decreasing network time of austin or rose
 	NAME="ROSE AUSTIN"
 echo
@@ -354,6 +346,15 @@ then
 	echo "[DISABLE TC MODE]..."
 	FILTER_TC="" #if austin&rose could not be online,it's not necessary to enable tc
 fi
+
+
+if [ "$FILTER_MODE" != "" ];then
+	killall hostapd
+	echo "TURN OFF HOSTAPD"
+	echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
+	echo "" > ${PATH_LOG}/AP_ID
+fi
+
 
 #ready to set command.
 
