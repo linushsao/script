@@ -10,7 +10,7 @@ c1=`pidof ${PARAM}`
 echo $c1
 
 #NETHOURS=(22 23 0 1 2 3 4 5 6 7 12 13 18 19)
-NETHOURS=(9 10 18 19 20 21 )
+NETHOURS=(`cat /home/linus/log/NETHOURS.conf`)
 
 #get today's data
 DTIME=`date +%F@%R`
