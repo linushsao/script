@@ -4,13 +4,15 @@
 FILTER_ROSE="--block-rose" 
 FILTER_AUSTIN="--block-austin"
 FILTER_MODE="TRUE" #TRUE mean BLOCK AUSTIN & ROSE
-FILTER_TC="--enable-tc"
+#FILTER_TC="--enable-tc"
+FILTER_TC=""
 GAME_SWITCH="TRUE" #TRUE means opennet from minetest
 TEST_MODE="TRUE"
 RESET_MODE="--enable-reset"
 HARDRESET_MODE=""
 FORCE_MODE=""
 AP_NAME="Linuslab-AP"
+HOSTAP_PARAM="hostapd"
 
 #time sheet,children could use adsl-net during these time(0~24).
 #day hour minute-start minute-end
@@ -152,23 +154,45 @@ check_nethours () {
 					do
 						if [ `expr "$ii" - "$MIN"` == "0" ]; then
 							echo "###MATCH###"
+							check_ap
 							FILTER_MODE=""
 						fi
 					done
 			fi
 	fi
+
+	if [ "$FILTER_MODE" == "" ];then
+		killall hostapd
+		echo "TURN OFF HOSTAPD"
+		echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
+		echo "" > ${PATH_LOG}/AP_ID
+	fi
+}
+
+check_ap () {
+
+			c1=`pidof ${HOSTAP_PARAM}`
+			echo $c1
+			if [ "$c1" == "" ];then
+			/home/linus/script/nat-family-1.sh --enable-hardreset --enable-reset
+			echo "TURN ON Ap..."
+			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
+			else
+			echo "$DTIME :HOSTAPD is ALIVE" >> /home/linus/log/check_ap.log
+			fi
+
 }
 
 #check_allow_service
 check_servies () {
-	a=""
-	if [ "$a" == "" ] && [ "$FILTER_MODE" == ""  ];then
-		echo "[START TINYPROXY]..."
-		systemctl start tinyproxy
-	elif [ "$a" != "" ] && [ "$FILTER_MODE" != ""  ];then
-		echo "[STOP TINYPROXY]..."
-		systemctl stop tinyproxy
-	fi
+#	a=""
+#	if [ "$a" == "" ] && [ "$FILTER_MODE" == ""  ];then
+#		echo "[START TINYPROXY]..."
+#		systemctl start tinyproxy
+#	elif [ "$a" != "" ] && [ "$FILTER_MODE" != ""  ];then
+#		echo "[STOP TINYPROXY]..."
+#		systemctl stop tinyproxy
+#	fi
 
 }
 #function to check if time-limited.

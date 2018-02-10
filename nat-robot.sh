@@ -170,6 +170,7 @@ case ${ans} in
 					read -p "ESSID:" ans2
 					read -p "PASSWD:" ans3
 					wpa_passphrase ${ans2} ${ans3} > ${HOME_PATH}script/now.conf
+					wpa_passphrase ${ans2} ${ans3} > ${HOME_PATH}script/${ans2}.conf
 					echo "WPA_PASSPHRASE is GENERATED."
 					cat ${HOME_PATH}script/now.conf
 			elif [ ${ans1} == "nm" ]; then

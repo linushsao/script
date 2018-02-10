@@ -5,9 +5,8 @@
 
 PARAM="hostapd"
 CHECK=""
+PATH_LOG="/home/linus/log"
 
-c1=`pidof ${PARAM}`
-echo $c1
 
 #NETHOURS=(22 23 0 1 2 3 4 5 6 7 12 13 18 19)
 NETHOURS=(`cat /home/linus/log/NETHOURS.conf`)
@@ -24,6 +23,8 @@ do
 		D1=${NETHOURS[$i]} 
 		if [ `expr "$D1" - "$HOUR"` == "0" ]; then
 			CHECK="TRUE"
+			c1=`pidof ${PARAM}`
+			echo $c1
 			if [ "$c1" == "" ];then
 			/home/linus/script/nat-family-1.sh --enable-hardreset --enable-reset
 			echo "TURN ON Ap..."
@@ -38,6 +39,7 @@ if [ "$CHECK" == "" ];then
 	killall hostapd
 	echo "TURN OFF HOSTAPD"
 	echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
+	echo "" > ${PATH_LOG}/AP_ID
 fi
 echo "CHECK:"$CHECK
 exit 0

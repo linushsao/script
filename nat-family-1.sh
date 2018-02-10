@@ -7,9 +7,12 @@ RESET_MODE="" #TRUE:enable RESET,other:disable
 HARD_RESET_MODE="" #TRUE:enable RESET,other:disable
 WIRED_MODE="TRUE" #TRUE:enable wired,other:wireless
 VERBOSE_MODE=""   #TRUE:enable debug mode
+MOBILE_MODE="" #TRUE:enable mobile network
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
 CHECK_NETWORK=`cat home/linus/log/CHECK_NETWORK` # empty:disable
+
+PATH_LOG="/home/linus/log"
 
 NETMASK="255.255.255.0"
 
@@ -40,6 +43,8 @@ IP_TEST=(
 IP_PUBLIC=(
 192.168.12.134
 )
+
+MOBILES_AP=(`cat /home/linus/log/MOBILES.conf`)
 
 #extra_ip of server of debian sources.list & others
 #LIBRARY 163.29.36.96 203.64.154.21
@@ -96,6 +101,10 @@ do
 		then
 		echo "[configure:BLOCK_ROSE]"
 		BLOCK_ROSE="TRUE"
+	elif [ "$var" == "--enable-mobile" ]
+		then
+		echo "[configure:ENABLE MOBILE]"
+		MOBILE_MODE="TRUE"
 	elif [ "$var" == "--block-test" ]
 		then
 		echo "[configure:BLOCK_TEST]"
@@ -138,6 +147,27 @@ hostapd -dd /etc/hostapd/hostapd.conf
 
 fi
 
+if  [ "$MOBILE_MODE" == "TRUE" ]; then
+	ifconfig ${EXTIF_1}  up
+
+	#starting to check mobile ap
+	for ((i=0; i<${#MOBILES_AP[@]}; i++))
+	do 
+			D1=`iwlist ${EXTIF_1} scanning | grep ${NMOBILES_AP[$i]}`
+			if [ "$D1" != "" && `cat ${PATH_LOG}/AP_ID` == "" ]; then
+				echo "FOUND MOBILE AP :${NMOBILES_AP[$i] , trying to connecting to..."
+				killall wpa_supplicant
+				sleep 1
+				wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/${NMOBILES_AP[$i].conf &
+				sleep 1
+				dhclient -v ${EXTIF_1} &
+				echo ${NMOBILES_AP[$i] > ${PATH_LOG}/AP_ID
+				echo "$DTIME :FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..." >> /home/linus/log/mobile_ap.log
+			fi
+	done
+fi
+
+
 if  [ "$RESET_MODE" == "TRUE" ]; then
 
 	IPTABLES=/sbin/iptables
@@ -155,6 +185,39 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_nat_ftp
 
 	echo 1 > /proc/sys/net/ipv4/ip_forward
+	
+	if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
+		echo "[BLOCK AUSTIN]..."
+		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
+		do 
+			$IPTABLES -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
+			if [ "$VERBOSE_MODE" == "TRUE" ]; then
+			echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP"
+			fi		
+		done
+	fi
+		
+	if [ "$BLOCK_ROSE" == "TRUE" ]; then
+		echo "[BLOCK ROSE]..."
+		for ((i=0; i<${#IP_ROSE[@]}; i++))
+		do 
+			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
+			if [ "$VERBOSE_MODE" == "TRUE" ]; then
+			echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP"
+			fi		
+		done
+	fi
+
+	if [ "$BLOCK_TEST" == "TRUE" ]; then
+		echo "[BLOCK TESTING]..." ; sleep 1
+		for ((i=0; i<${#IP_TEST[@]}; i++))
+		do 
+			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
+			echo
+		done
+	fi
+
+	echo "[ENABLE NAT]..." ;sleep 1
 	$IPTABLES -t nat -A POSTROUTING -j MASQUERADE		
 
 fi
