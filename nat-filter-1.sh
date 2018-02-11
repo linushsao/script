@@ -15,6 +15,8 @@ FORCE_MODE=""
 AP_NAME="Linuslab-AP"
 HOSTAP_PARAM="hostapd"
 
+PATH_LOG="/home/linus/log"
+
 #time sheet,children could use adsl-net during these time(0~24).
 #day hour minute-start minute-end
 NETHOURS=(
@@ -328,10 +330,10 @@ echo
 			fi
 				
 		fi
-		ls -al ../log/ | grep $name
-		echo "NC: "`cat ../log/nc_$name`
-		echo "TL/TOTAL: "`cat ../log/tl_$name` "/ "$TODAY_LIMITED
-		echo "TC: "`cat ../log/tc_$name`
+		ls -al ${PATH_LOG}/ | grep $name
+		echo "NC: "`cat ${PATH_LOG}/nc_$name`
+		echo "TL/TOTAL: "`cat ${PATH_LOG}/tl_$name` "/ "$TODAY_LIMITED
+		echo "TC: "`cat ${PATH_LOG}/tc_$name`
 
 	done
 
