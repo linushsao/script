@@ -166,10 +166,10 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 				echo "FOUND MOBILE AP :${NMOBILES_AP[$i] , trying to connecting to..."
 				killall wpa_supplicant
 				sleep 1
-				wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/${NMOBILES_AP[$i].conf &
+				wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/${NMOBILES_AP[$i]}.conf &
 				sleep 1
 				dhclient -v ${EXTIF_1} &
-				echo ${NMOBILES_AP[$i] > ${PATH_LOG}/AP_ID
+				echo ${NMOBILES_AP[$i]} > ${PATH_LOG}/AP_ID
 				echo "$DTIME :FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..." >> /home/linus/log/mobile_ap.log
 			fi
 	done
