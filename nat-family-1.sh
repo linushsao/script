@@ -8,6 +8,7 @@ HARD_RESET_MODE="" #TRUE:enable RESET,other:disable
 WIRED_MODE="TRUE" #TRUE:enable wired,other:wireless
 VERBOSE_MODE=""   #TRUE:enable debug mode
 MOBILE_MODE="" #TRUE:enable mobile network
+CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
 CHECK_NETWORK=`cat home/linus/log/CHECK_NETWORK` # empty:disable
@@ -81,6 +82,10 @@ do
 		then
 		echo "[configure:ENABLE_VERBOSE]"
 		VERBOSE_MODE="TRUE"
+	elif [ "$var" == "--enable-create_ap" ]
+		then
+		echo "[configure:ENABLE_CREATE_AP]"
+		CREATE_AP="TRUE"
 	elif [ "$var" == "--enable-reset" ]
 		then
 		echo "[configure:ENABLE_reset]"
@@ -125,18 +130,20 @@ ifconfig ${INIF} up
 ifconfig ${EXTIF}  up
 ifconfig ${EXTIF_1}  up
 
-#create softAP
-#create_ap $INIF $EXTIF Linuslab-AP 0726072652
-
 ifconfig $INIF 192.168.0.1
 
-systemctl stop haveged
-systemctl start haveged
-killall dhcpd;sleep 1
-dhcpd $INIF
-killall hostapd;sleep 1
-hostapd -dd /etc/hostapd/hostapd.conf
+	if  [ "$CREATE_AP" == "TRUE" ]; then
+		#create softAP
+		#create_ap $INIF $EXTIF Linuslab-AP 0726072652
+	else
 
+		systemctl stop haveged
+		systemctl start haveged
+		killall dhcpd;sleep 1
+		dhcpd $INIF
+		killall hostapd;sleep 1
+		hostapd -dd /etc/hostapd/hostapd.conf
+	fi
 
 #connect to Yafinus
 #killall wpa_supplicant
