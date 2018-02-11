@@ -26,7 +26,7 @@ do
 			c1=`pidof ${PARAM}`
 			echo $c1
 			if [ "$c1" == "" ];then
-			/home/linus/script/nat-family-1.sh --enable-hardreset --enable-reset
+			/home/linus/script/nat-family-1.sh --enable-hardreset
 			echo "TURN ON Ap..."
 			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 			else
