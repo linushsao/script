@@ -136,7 +136,6 @@ ifconfig $INIF 192.168.0.1
 		#create softAP
 		create_ap $INIF $EXTIF Linuslab-AP 0726072652
 	else
-
 		systemctl stop haveged
 		systemctl start haveged
 		killall dhcpd;sleep 1

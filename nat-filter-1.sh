@@ -168,7 +168,7 @@ check_ap () {
 			c1=`pidof ${HOSTAP_PARAM}`
 			echo $c1
 			if [ "$c1" == "" ];then
-			FILTER_NETWORK="--enable-hardreset --enable-reset"
+			FILTER_NETWORK="--enable-hardreset --enable-reset "`cat ${PATH_LOG}/check_ap_param`
 			echo "TURN ON Ap..."
 			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 			else
