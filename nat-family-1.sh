@@ -134,7 +134,7 @@ ifconfig $INIF 192.168.0.1
 
 	if  [ "$CREATE_AP" == "TRUE" ]; then
 		#create softAP
-		#create_ap $INIF $EXTIF Linuslab-AP 0726072652
+		create_ap $INIF $EXTIF Linuslab-AP 0726072652
 	else
 
 		systemctl stop haveged
