@@ -6,6 +6,7 @@ FILTER_AUSTIN="--block-austin"
 FILTER_MODE="TRUE" #TRUE mean BLOCK AUSTIN & ROSE
 #FILTER_TC="--enable-tc"
 FILTER_TC=""
+FILTER_NETWORK=""
 GAME_SWITCH="TRUE" #TRUE means opennet from minetest
 TEST_MODE="TRUE"
 RESET_MODE="--enable-reset"
@@ -167,7 +168,7 @@ check_ap () {
 			c1=`pidof ${HOSTAP_PARAM}`
 			echo $c1
 			if [ "$c1" == "" ];then
-			/home/linus/script/nat-family-1.sh --enable-hardreset --enable-reset
+			FILTER_NETWORK="--enable-hardreset --enable-reset"
 			echo "TURN ON Ap..."
 			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
 			else
@@ -359,7 +360,7 @@ fi
 #ready to set command.
 
 echo "[STARTING TO CONFIURE FILTER PARAM]..echo."
-PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$FILTER_TC
+PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$FILTER_TC" "$FILTER_NETWORK
 
 if [ "$FORCE_MODE" != "" ]; then
 	echo "" > /home/linus/log/para
