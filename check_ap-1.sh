@@ -9,7 +9,7 @@ PATH_LOG="/home/linus/log"
 
 
 #NETHOURS=(22 23 0 1 2 3 4 5 6 7 12 13 18 19)
-NETHOURS=(`cat /home/linus/log/NETHOURS.conf`)
+NETHOURS=(`cat /home/linus/log/NETHOURS_1.conf`)
 
 #get today's data
 DTIME=`date +%F@%R`

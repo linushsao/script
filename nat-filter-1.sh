@@ -20,38 +20,7 @@ PATH_LOG="/home/linus/log"
 #time sheet,children could use adsl-net during these time(0~24).
 #day hour minute-start minute-end
 NETHOURS=(
-1 13 55 59
-1 14 0 59
-1 15 0 59
-1 16 0 59
-2 13 55 59
-2 14 0 59
-2 15 0 59
-2 16 0 59
-3 13 55 59
-3 14 0 59
-3 15 0 59
-3 16 0 59
-4 13 55 59
-4 14 0 59
-4 15 0 59
-4 16 0 59
-5 13 55 59
-5 14 0 59
-5 15 0 59
-5 16 0 59
-6 9 0 59
-6 14 0 59
-6 15 0 59
-6 16 0 59
-6 17 0 30
-7 9 0 59
-7 10 0 59
-7 11 0 30
-7 14 0 59
-7 15 0 59
-7 16 0 59
-7 17 0 30
+`cat /home/linus/log/NETHOURS.conf`
 )
 #for summer vocation
 NETHOURS_EXTRA=`cat /home/linus/log/NETHOURS_EXTRA`
@@ -93,13 +62,8 @@ NETHOURS_NOLIMITED=(
 #6 180
 #7 180)
 TIME_LIMITED_SHEET=(
-1 150
-2 150
-3 150
-4 150
-5 150
-6 180
-7 180)
+`cat /home/linus/log/TIME_LIMITED_SHEET.conf`
+)
 
 #get today's data
 DTIME=`date +%F@%R`
