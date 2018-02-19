@@ -316,10 +316,11 @@ fi
 
 
 if [ "$FILTER_MODE" != "" ];then
-	killall hostapd
-	echo "TURN OFF HOSTAPD"
-	echo "$DTIME :turn off HOSTAPD" >> /home/linus/log/check_ap.log
-	echo "" > ${PATH_LOG}/AP_ID
+	FILTER_NETWORK="--enable-noforward"
+	#killall hostapd
+	echo "TURN OFF FORWARD"
+	echo "$DTIME :turn off FORWARD" >> /home/linus/log/check_ap.log
+	#echo "" > ${PATH_LOG}/AP_ID
 fi
 
 

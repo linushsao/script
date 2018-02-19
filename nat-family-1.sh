@@ -8,6 +8,7 @@ HARD_RESET_MODE="" #TRUE:enable RESET,other:disable
 WIRED_MODE="TRUE" #TRUE:enable wired,other:wireless
 VERBOSE_MODE=""   #TRUE:enable debug mode
 MOBILE_MODE="" #TRUE:enable mobile network
+FORWARD_MODE="TRUE"  #TRUE means enable connect forward(NAT)
 CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
@@ -82,6 +83,10 @@ do
 		then
 		echo "[configure:ENABLE_VERBOSE]"
 		VERBOSE_MODE="TRUE"
+	elif [ "$var" == "--enable-noforward" ]
+		then
+		echo "[configure:ENABLE_NOFORWARD]"
+		FORWARD_MODE=""
 	elif [ "$var" == "--enable-create_ap" ]
 		then
 		echo "[configure:ENABLE_CREATE_AP]"
@@ -124,6 +129,26 @@ do
 	fi
 	
 done
+
+sleep 1
+
+if  [ "$FORWARD_MODE" != "TRUE" ]; then
+	IPTABLES=/sbin/iptables
+	$IPTABLES -F
+	$IPTABLES -F -t nat
+	$IPTABLES -X
+
+	$IPTABLES -P INPUT ACCEPT
+	$IPTABLES -P OUTPUT ACCEPT
+	$IPTABLES -P FORWARD DROP
+
+	modprobe ip_conntrack
+	modprobe iptable_nat
+	modprobe ip_conntrack_ftp
+	modprobe ip_nat_ftp
+
+	echo 0 > /proc/sys/net/ipv4/ip_forward
+fi
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 ifconfig ${INIF} up
