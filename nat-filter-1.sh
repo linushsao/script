@@ -123,7 +123,6 @@ check_nethours () {
 						if [ `expr "$ii" - "$MIN"` == "0" ]; then
 							echo "###MATCH###"
 							FILTER_MODE=""
-							check_ap
 						fi
 					done
 			fi
@@ -167,6 +166,9 @@ check_time_limited () {
 	fi
 }
 #-------------------------------------------------------------
+
+#check if hostapd alive
+check_ap
 
 #starting to check time
 COUNT=0
@@ -327,7 +329,7 @@ fi
 
 #ready to set command.
 
-echo "[STARTING TO CONFIURE FILTER PARAM]..echo."
+echo "[STARTING TO CONFIURE FILTER PARAM]..."
 PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$FILTER_TC" "$FILTER_NETWORK
 
 if [ "$FORCE_MODE" != "" ]; then
