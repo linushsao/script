@@ -131,6 +131,14 @@ do
 	
 done
 
+#-----------all function
+log_record () {
+
+if [ "${MSG}" != "" ];then
+	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/switch.log
+fi
+}
+#-----------
 sleep 1
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
@@ -145,6 +153,8 @@ ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
 		killall hostapd;sleep 1
 		killall dhcpd;sleep 1
 		create_ap $INIF $EXTIF Linuslab-AP 0726072652
+		MSG="CREATE AP by CREATE_AP SCRIPT"
+		log_record
 	else
 		systemctl stop haveged
 		systemctl start haveged
@@ -152,6 +162,8 @@ ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
 		dhcpd $INIF
 		killall hostapd;sleep 1
 		hostapd -dd /etc/hostapd/hostapd.conf
+		MSG="CREATE AP by MANUEL(hostapd+dhcpd)"
+		log_record
 	fi
 
 #connect to Yafinus
@@ -178,7 +190,8 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 				sleep 1
 				dhclient -v ${EXTIF_1} &
 				echo ${NMOBILES_AP[$i]} > ${PATH_LOG}/AP_ID
-				echo "${SCRIPT_NAME} $DTIME :FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..." >> /home/linus/log/check_ap.log
+				MSG="FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..."
+				log_record
 			fi
 	done
 fi
@@ -202,14 +215,16 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 
 	echo 1 > /proc/sys/net/ipv4/ip_forward
 	
+	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
+	log_record
+	
 	if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
 		echo "[BLOCK AUSTIN]..."
 		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
-			if [ "$VERBOSE_MODE" == "TRUE" ]; then
-			echo "iptables -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP"
-			fi		
+			MSG="BLOCK AUSTIN"
+			log_record
 		done
 	fi
 		
@@ -218,9 +233,8 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_ROSE[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
-			if [ "$VERBOSE_MODE" == "TRUE" ]; then
-			echo "iptables -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP"
-			fi		
+			MSG="BLOCK ROSE"
+			log_record
 		done
 	fi
 
@@ -229,20 +243,24 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
-			echo
+			MSG="BLOCK TEST"
+			log_record
 		done
 	fi
 
 	if  [ "$INTRANET_MODE" != "TRUE" ]; then
 		echo "[ENABLE NAT]..." ;sleep 1
 		$IPTABLES -t nat -A POSTROUTING -j MASQUERADE
+		MSG="ENABLE MASQUERADE"
+		log_record
 	fi
 fi
 
 #----TC/
 if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
 	echo "[ENABLE TC]..."
-
+	MSG="ENABLE TC"
+	log_record
 	# uploads
 	# 設定上傳方面，先利用 iptables 給封包貼標籤，再交由 fw 過濾器進行過濾
  
