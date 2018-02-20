@@ -138,6 +138,8 @@ check_ap () {
 			echo "TURN ON Ap..."
 			MSG="turn on HOSTAPD" 
 			log_record
+			/home/linus/script/nat-family-1.sh $FILTER_NETWORK
+			FILTER_NETWORK=""
 			else
 			MSG="HOSTAPD is ALIVE"
 			log_record
@@ -176,7 +178,7 @@ check_time_limited () {
 }
 #-------------------------------------------------------------
 
-#check if hostapd alive
+#check if hostapd alive at first
 check_ap
 
 #starting to check time
