@@ -370,11 +370,11 @@ elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | 
 else #start to execute command
 
 	echo "[EXECUTE MODE ]..."
-	
-	/home/linus/script/nat-family-1.sh $PARA
 	echo  $PARA > ${PATH_LOG}/para
 	MSG="EXECUTE PARAM = | ${PARA} |"
 	log_record
+	
+	/home/linus/script/nat-family-1.sh $PARA
 fi
 
 echo "++++++++++++++++++++++++++++++++[FILTER END]"

@@ -143,11 +143,12 @@ fi
 sleep 1
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
-ifconfig ${INIF} up
-ifconfig ${EXTIF}  up
-ifconfig ${EXTIF_1}  up
-
-ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
+	ifconfig ${INIF} up
+	ifconfig ${EXTIF}  up
+	ifconfig ${EXTIF_1}  up
+	ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
+	MSG="network interface init..."
+	log_record
 
 	if  [ "$CREATE_AP" == "TRUE" ]; then
 		#create softAP
