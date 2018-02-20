@@ -136,10 +136,19 @@ check_ap () {
 			if [ "$c1" == "" ];then
 			FILTER_NETWORK="--enable-hardreset --enable-reset "`cat ${PATH_LOG}/check_ap_param`
 			echo "TURN ON Ap..."
-			echo "${SCRIPT_NAME} $DTIME :turn on HOSTAPD" >> ${PATH_LOG}/check_ap.log
+			MSG="turn on HOSTAPD" 
+			log_record
 			else
-			echo "${SCRIPT_NAME} $DTIME :HOSTAPD is ALIVE" >> ${PATH_LOG}/check_ap.log
+			MSG="HOSTAPD is ALIVE"
+			log_record
 			fi
+}
+
+log_record () {
+
+if [ "${MSG}" != "" ];then
+	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/check_ap.log
+fi
 }
 
 #check_allow_service
@@ -293,7 +302,8 @@ echo
 			
 			if [ "$COIN" == "0" ] && [ -f ${PATH_LOG}/switch_"$name" ]; then
 				rm ${PATH_LOG}/switch_"$name" #automatically turn-off user's nc switch.
-				echo "${SCRIPT_NAME} ${DTIME} ${name} SWITCH OFF(by system) " >> ${PATH_LOG}/switch.log
+				MSG="${name} SWITCH OFF(by system) "
+				log_record
 			fi
 				
 		fi
@@ -322,7 +332,8 @@ if [ "$FILTER_MODE" != "" ] && [ "$FILTER_NETWORK" != "" ];then
 	FILTER_NETWORK="--enable-reset --enable-intranet"
 	#killall hostapd
 	echo "TURN OFF FORWARD TO INTERNET"
-	echo "${SCRIPT_NAME} $DTIME :turn off FORWARD to internet" >> ${PATH_LOG}/check_ap.log
+	MSG="turn off FORWARD to internet"
+	log_record
 	#echo "" > ${PATH_LOG}/AP_ID
 fi
 
@@ -352,7 +363,8 @@ if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
 	exit 0
 elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | tr -d '[:space:]')" ]; then
 	echo "NOT execute script,just show the same param: "$PARA
-	echo ${SCRIPT_NAME}" "$DTIME ": DUPLUCATE PARAM = |" $PARA "|" >> ${PATH_LOG}/net-filter.log
+	MSG="DUPLUCATE PARAM = |" $PARA "|"
+	log_record
 	exit 0
 	
 else #start to execute command
@@ -361,8 +373,8 @@ else #start to execute command
 	
 	/home/linus/script/nat-family-1.sh $PARA
 	echo  $PARA > ${PATH_LOG}/para
-	echo ${SCRIPT_NAME}" "$DTIME ": EXECUTE PARAM = |" $PARA "|" >> ${PATH_LOG}/net-filter.log
-
+	MSG="EXECUTE PARAM = |" $PARA "|"
+	log_record
 fi
 
 echo "++++++++++++++++++++++++++++++++[FILTER END]"

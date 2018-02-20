@@ -135,7 +135,7 @@ done
 log_record () {
 
 if [ "${MSG}" != "" ];then
-	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/switch.log
+	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/check_ap.log
 fi
 }
 #-----------
