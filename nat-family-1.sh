@@ -256,3 +256,5 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		log_record
 	fi
 fi
+
+exit 0
