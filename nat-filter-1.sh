@@ -14,16 +14,17 @@ HARDRESET_MODE=""
 FORCE_MODE=""
 AP_NAME="Linuslab-AP"
 HOSTAP_PARAM="hostapd"
+SCRIPT_NAME="[nat-filter]"
 
 PATH_LOG="/home/linus/log"
 
 #time sheet,children could use adsl-net during these time(0~24).
 #day hour minute-start minute-end
 NETHOURS=(
-`cat /home/linus/log/NETHOURS.conf`
+`cat ${PATH_LOG}/NETHOURS.conf`
 )
 #for summer vocation
-NETHOURS_EXTRA=`cat /home/linus/log/NETHOURS_EXTRA`
+NETHOURS_EXTRA=`cat ${PATH_LOG}/NETHOURS_EXTRA`
 
 #NET_NOLIMITED,for kid to search books or others
 NETHOURS_NOLIMITED=(
@@ -62,7 +63,7 @@ NETHOURS_NOLIMITED=(
 #6 180
 #7 180)
 TIME_LIMITED_SHEET=(
-`cat /home/linus/log/TIME_LIMITED_SHEET.conf`
+`cat ${PATH_LOG}/TIME_LIMITED_SHEET.conf`
 )
 
 #get today's data
@@ -136,9 +137,9 @@ check_ap () {
 			if [ "$c1" == "" ];then
 			FILTER_NETWORK="--enable-hardreset --enable-reset "`cat ${PATH_LOG}/check_ap_param`
 			echo "TURN ON Ap..."
-			echo "$DTIME :turn on HOSTAPD" >> /home/linus/log/check_ap.log
+			echo "$DTIME :turn on HOSTAPD" >> ${SCRIPT_NAME}" "${PATH_LOG}/check_ap.log
 			else
-			echo "$DTIME :HOSTAPD is ALIVE" >> /home/linus/log/check_ap.log
+			echo "$DTIME :HOSTAPD is ALIVE" >> ${SCRIPT_NAME}" "${PATH_LOG}/check_ap.log
 			fi
 }
 
@@ -158,7 +159,7 @@ check_servies () {
 check_time_limited () {
 	if [ "$D1" == "$NOW" ]; then
 		echo "###MATCH time limited###"
-		extra_tl=`cat /home/linus/log/EXTRA_TL`
+		extra_tl=`cat ${PATH_LOG}/EXTRA_TL`
 		if [ "$extra_tl" == "" ];then
 			extra_tl=0
 		fi
@@ -245,34 +246,34 @@ echo
 	for name in $NAME
 		do
 		echo "[CHECKING if NC exist]..."
-		if ! [ -f /home/linus/log/nc_$name ]; then
-			echo "0" > /home/linus/log/nc_$name
+		if ! [ -f ${PATH_LOG}/nc_$name ]; then
+			echo "0" > ${PATH_LOG}/nc_$name
 		fi
 		
 		echo "[CHECKING if time limited file exist and compare]..."
-		if ! [ -f /home/linus/log/tl_$name ]; then
-			echo "0" > /home/linus/log/tl_$name
+		if ! [ -f ${PATH_LOG}/tl_$name ]; then
+			echo "0" > ${PATH_LOG}/tl_$name
 			else
-			TL=`cat /home/linus/log/tl_"$name"`
+			TL=`cat ${PATH_LOG}/tl_"$name"`
 			if [ `expr "$TL" - "$TODAY_LIMITED"` == "0" ]; then
 			FILTER_MODE="TRUE"
 			echo "[CHECKING TimeLimited: $name already use $TL minutes]..."
 			fi
 		fi
 
-		COIN=`cat /home/linus/log/nc_"$name"`
+		COIN=`cat ${PATH_LOG}/nc_"$name"`
 	
 		if [ "$COIN" != "0" ] && [ "$FILTER_MODE" != "TRUE" ]
 			then
-			if [ "$GAME_SWITCH" == "" ] || [ -f /home/linus/log/switch_"$name" ]
+			if [ "$GAME_SWITCH" == "" ] || [ -f ${PATH_LOG}/switch_"$name" ]
 			then
 				OP="1"
-				if ! [ -f /home/linus/log/minetest_launch ]; then
+				if ! [ -f ${PATH_LOG}/minetest_launch ]; then
 					COUNT=`expr "$COIN" - "$OP"` #check evey 1 minute,decrease the nc
 					COUNT1=`expr "$TL" + "$OP"` #check evey 1 minute,increase the time_limited.
 				fi
-				echo "$COUNT" > /home/linus/log/nc_"$name"
-				echo "$COUNT1" > /home/linus/log/tl_"$name"
+				echo "$COUNT" > ${PATH_LOG}/nc_"$name"
+				echo "$COUNT1" > ${PATH_LOG}/tl_"$name"
 				if [ "$name" == "AUSTIN" ]; then
 					FILTER_AUSTIN=""
 					elif [ "$name" == "ROSE" ]; then
@@ -288,9 +289,9 @@ echo
 				echo "[$name was BLOCKED ...]"
 			fi
 			
-			if [ "$COIN" == "0" ] && [ -f /home/linus/log/switch_"$name" ]; then
-				rm /home/linus/log/switch_"$name" #automatically turn-off user's nc switch.
-				echo "${DTIME} ${name} SWITCH OFF(by system) " >> /home/linus/log/switch.log
+			if [ "$COIN" == "0" ] && [ -f ${PATH_LOG}/switch_"$name" ]; then
+				rm ${PATH_LOG}/switch_"$name" #automatically turn-off user's nc switch.
+				echo "${SCRIPT_NAME} ${DTIME} ${name} SWITCH OFF(by system) " >> ${PATH_LOG}/switch.log
 			fi
 				
 		fi
@@ -301,7 +302,7 @@ echo
 
 	done
 
-EXTRA=`cat /home/linus/log/extra_mode` #ignore time
+EXTRA=`cat ${PATH_LOG}/extra_mode` #ignore time
 if [ "$(echo -e "${EXTRA}" | tr -d '[:space:]')" != "" ]; then
 	FILTER_MODE=""
 	else
@@ -319,7 +320,7 @@ if [ "$FILTER_MODE" != "" ] && [ "$FILTER_NETWORK" != "" ];then
 	FILTER_NETWORK="--enable-reset --enable-intranet"
 	#killall hostapd
 	echo "TURN OFF FORWARD TO INTERNET"
-	echo "$DTIME :turn off FORWARD to internet" >> /home/linus/log/check_ap.log
+	echo "${SCRIPT_NAME} $DTIME :turn off FORWARD to internet" >> ${PATH_LOG}/check_ap.log
 	#echo "" > ${PATH_LOG}/AP_ID
 fi
 
@@ -330,15 +331,15 @@ echo "[STARTING TO CONFIURE FILTER PARAM]..echo."
 PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$FILTER_TC" "$FILTER_NETWORK
 
 if [ "$FORCE_MODE" != "" ]; then
-	echo "" > /home/linus/log/para
+	echo "" > ${PATH_LOG}/para
 	echo "[FORCE MODE,REASE OLD PARA file]..."
 fi
 
-if ! [ -f /home/linus/log/para ]; then
-    touch /home/linus/log/para
+if ! [ -f ${PATH_LOG}/para ]; then
+    touch ${PATH_LOG}/para
 	echo "[CREATE NEW EMPTY PARA file]..."
 fi
-OLD_PARA=`cat /home/linus/log/para`
+OLD_PARA=`cat ${PATH_LOG}/para`
 
 echo ""
 
@@ -349,7 +350,7 @@ if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
 	exit 0
 elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | tr -d '[:space:]')" ]; then
 	echo "NOT execute script,just show the same param: "$PARA
-	echo $DTIME ": DUPLUCATE PARAM = |" $PARA "|" >> /home/linus/log/net-filter.log
+	echo ${SCRIPT_NAME}" "$DTIME ": DUPLUCATE PARAM = |" $PARA "|" >> ${PATH_LOG}/net-filter.log
 	exit 0
 	
 else #start to execute command
@@ -357,8 +358,8 @@ else #start to execute command
 	echo "[EXECUTE MODE ]..."
 	
 	/home/linus/script/nat-family-1.sh $PARA
-	echo  $PARA > /home/linus/log/para
-	echo $DTIME ": EXECUTE PARAM = |" $PARA "|" >> /home/linus/log/net-filter.log
+	echo  $PARA > ${PATH_LOG}/para
+	echo ${SCRIPT_NAME}" "$DTIME ": EXECUTE PARAM = |" $PARA "|" >> ${PATH_LOG}/net-filter.log
 
 fi
 
