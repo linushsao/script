@@ -259,7 +259,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 fi
 
 #----TC/
-if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
+if [ "$TC_MODE" == "TRUE" ];then
 	echo "[ENABLE TC]..."
 	MSG="ENABLE TC"
 	log_record
