@@ -13,6 +13,7 @@ CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
 CHECK_NETWORK=`cat home/linus/log/CHECK_NETWORK` # empty:disable
+SCRIPT_NAME="[nat-family]"
 
 PATH_LOG="/home/linus/log"
 
@@ -177,7 +178,7 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 				sleep 1
 				dhclient -v ${EXTIF_1} &
 				echo ${NMOBILES_AP[$i]} > ${PATH_LOG}/AP_ID
-				echo "$DTIME :FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..." >> /home/linus/log/mobile_ap.log
+				echo "${SCRIPT_NAME} $DTIME :FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..." >> /home/linus/log/check_ap.log
 			fi
 	done
 fi
