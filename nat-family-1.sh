@@ -1,5 +1,6 @@
 #!/bin/bash
-#exit 0
+#
+
 D=`date +%F@%R`
 DTIME=$D
 
