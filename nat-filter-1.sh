@@ -316,10 +316,10 @@ fi
 
 
 if [ "$FILTER_MODE" != "" ];then
-	FILTER_NETWORK="--enable-noforward"
+	FILTER_NETWORK="--enable-reset --enable-intranet"
 	#killall hostapd
-	echo "TURN OFF FORWARD"
-	echo "$DTIME :turn off FORWARD" >> /home/linus/log/check_ap.log
+	echo "TURN OFF FORWARD TO INTERNET"
+	echo "$DTIME :turn off FORWARD to internet" >> /home/linus/log/check_ap.log
 	#echo "" > ${PATH_LOG}/AP_ID
 fi
 
