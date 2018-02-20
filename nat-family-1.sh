@@ -374,16 +374,3 @@ if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
 fi
 
 echo "++++++++++++++++++++++++++++++++[INIT END]"
-echo ""
-	
-
-
-    
-    
-
-    
-    
-               
-
-  
-  

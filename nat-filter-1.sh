@@ -373,7 +373,7 @@ else #start to execute command
 	
 	/home/linus/script/nat-family-1.sh $PARA
 	echo  $PARA > ${PATH_LOG}/para
-	MSG="EXECUTE PARAM = |" $PARA "|"
+	MSG="EXECUTE PARAM = | ${PARA} |"
 	log_record
 fi
 
