@@ -135,9 +135,8 @@ done
 #-----------all function
 log_record () {
 
-if [ "${MSG}" != "" ];then
-	echo "${SCRIPT_NAME} ${D} : ${MSG} " >> ${PATH_LOG}/check_ap.log
-fi
+	echo ${SCRIPT_NAME}" "${D}" :"${MSG} >> ${PATH_LOG}/check_ap.log
+
 }
 #-----------
 sleep 1
