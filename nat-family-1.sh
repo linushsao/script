@@ -252,8 +252,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	if  [ "$INTRANET_MODE" != "TRUE" ]; then
 		echo "[ENABLE NAT]..." ;sleep 1
 		$IPTABLES -t nat -A POSTROUTING -j MASQUERADE
-		MSG="ENABLE MASQUERADE"
-		log_record
 	fi
 fi
 
