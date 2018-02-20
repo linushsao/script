@@ -328,8 +328,8 @@ then
 fi
 
 
-if [ "$FILTER_MODE" != "" ] && [ "$FILTER_NETWORK" != "" ];then
-	FILTER_NETWORK="--enable-reset --enable-intranet"
+if [ "$FILTER_MODE" != "" ];then
+	FILTER_NETWORK="${FILTER_NETWORK} --enable-intranet"
 	#killall hostapd
 	echo "TURN OFF FORWARD TO INTERNET"
 	MSG="turn off FORWARD to internet"
