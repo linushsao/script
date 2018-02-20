@@ -137,9 +137,9 @@ check_ap () {
 			if [ "$c1" == "" ];then
 			FILTER_NETWORK="--enable-hardreset --enable-reset "`cat ${PATH_LOG}/check_ap_param`
 			echo "TURN ON Ap..."
-			echo "$DTIME :turn on HOSTAPD" >> ${SCRIPT_NAME}" "${PATH_LOG}/check_ap.log
+			echo "${SCRIPT_NAME} $DTIME :turn on HOSTAPD" >> ${PATH_LOG}/check_ap.log
 			else
-			echo "$DTIME :HOSTAPD is ALIVE" >> ${SCRIPT_NAME}" "${PATH_LOG}/check_ap.log
+			echo "${SCRIPT_NAME} $DTIME :HOSTAPD is ALIVE" >> ${PATH_LOG}/check_ap.log
 			fi
 }
 
