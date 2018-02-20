@@ -362,8 +362,8 @@ if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
 	echo $PARA
 	exit 0
 elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | tr -d '[:space:]')" ]; then
-	echo "NOT execute script,just show the same param: "$PARA
-	MSG="DUPLUCATE PARAM = |" $PARA "|"
+	echo "NOT execute script,just show the same param: ${PARA}"
+	MSG="DUPLUCATE PARAM = | ${PARA} |"
 	log_record
 	exit 0
 	
