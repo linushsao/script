@@ -2,7 +2,6 @@
 #
 
 D=`date +%F@%R`
-DTIME=$D
 
 #BASIC CONFIGURE
 RESET_MODE="" #TRUE:enable RESET,other:disable
@@ -137,7 +136,7 @@ done
 log_record () {
 
 if [ "${MSG}" != "" ];then
-	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/check_ap.log
+	echo "${SCRIPT_NAME} ${D} : ${MSG} " >> ${PATH_LOG}/check_ap.log
 fi
 }
 #-----------

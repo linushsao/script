@@ -149,7 +149,7 @@ check_ap () {
 log_record () {
 
 if [ "${MSG}" != "" ];then
-	echo "${SCRIPT_NAME} ${DTIME} :${MSG} " >> ${PATH_LOG}/check_ap.log
+	echo "${SCRIPT_NAME} ${DTIME} : ${MSG} " >> ${PATH_LOG}/check_ap.log
 fi
 }
 
