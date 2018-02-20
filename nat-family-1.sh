@@ -1,6 +1,7 @@
 #!/bin/bash
 #exit 0
 D=`date +%F@%R`
+DTIME=$D
 
 #BASIC CONFIGURE
 RESET_MODE="" #TRUE:enable RESET,other:disable
@@ -373,4 +374,4 @@ if [ "$TC_MODE" == "TRUE" ];then #if doing traffic control
 	#----TC
 fi
 
-echo "++++++++++++++++++++++++++++++++[INIT END]"
+echo "++++++++++++++++++++++++++++++++t [INIT END]"
