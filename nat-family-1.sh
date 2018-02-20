@@ -261,8 +261,6 @@ fi
 #----TC/
 if [ "$TC_MODE" == "TRUE" ];then
 	echo "[ENABLE TC]..."
-	MSG="ENABLE TC"
-	log_record
 	# uploads
 	# 設定上傳方面，先利用 iptables 給封包貼標籤，再交由 fw 過濾器進行過濾
  
