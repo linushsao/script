@@ -9,7 +9,7 @@ HARD_RESET_MODE="" #TRUE:enable RESET,other:disable
 WIRED_MODE="TRUE" #TRUE:enable wired,other:wireless
 VERBOSE_MODE=""   #TRUE:enable debug mode
 MOBILE_MODE="" #TRUE:enable mobile network
-INTRANET_MODE="TRUE"  #TRUE means disable ip_forward(NAT)
+INTRANET_MODE="TRUE"  #TRUE means enable connect forward(NAT)
 CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
@@ -133,6 +133,13 @@ do
 	
 done
 
+#-----------all function
+log_record () {
+
+	echo ${SCRIPT_NAME}" "${D}" :"${MSG} >> ${PATH_LOG}/check_ap.log
+
+}
+#-----------
 sleep 1
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
@@ -140,12 +147,16 @@ if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 	ifconfig ${EXTIF}  up
 	ifconfig ${EXTIF_1}  up
 	ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
+	MSG="network interface init..."
+	log_record
 
 	if  [ "$CREATE_AP" == "TRUE" ]; then
 		#create softAP
 		killall hostapd;sleep 1
 		killall dhcpd;sleep 1
 		create_ap $INIF $EXTIF Linuslab-AP 0726072652
+		MSG="CREATE AP by CREATE_AP SCRIPT"
+		log_record
 	else
 		systemctl stop haveged
 		systemctl start haveged
@@ -153,6 +164,8 @@ if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 		dhcpd $INIF
 		killall hostapd;sleep 1
 		hostapd -dd /etc/hostapd/hostapd.conf
+		MSG="CREATE AP by MANUEL(hostapd+dhcpd)"
+		log_record
 	fi
 
 #connect to Yafinus
@@ -164,55 +177,39 @@ if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 
 fi
 
-if  [ "$MOBILE_MODE" == "TRUE" ]; then
-	ifconfig ${EXTIF_1}  up
-
-	#starting to check mobile ap
-	for ((i=0; i<${#MOBILES_AP[@]}; i++))
-	do 
-			D1=`iwlist ${EXTIF_1} scanning | grep ${NMOBILES_AP[$i]}`
-			if [ "$D1" != "" && `cat ${PATH_LOG}/AP_ID` == "" ]; then
-				echo "FOUND MOBILE AP :${NMOBILES_AP[$i] , trying to connecting to..."
-				killall wpa_supplicant
-				sleep 1
-				wpa_supplicant -i ${EXTIF_1} -D wext -c /home/linus/log/${NMOBILES_AP[$i]}.conf &
-				sleep 1
-				dhclient -v ${EXTIF_1} &
-				echo ${NMOBILES_AP[$i]} > ${PATH_LOG}/AP_ID
-			fi
-	done
-fi
-
 if  [ "$INTRANET_MODE" == "" ]; then
+	MSG="DISABLE IP_FORWARD MODE..."
+	log_record
 	FORWARD="0"
 	else
+	MSG="ENABLE IP_FORWARD MODE..."
+	log_record
 	FORWARD="1"
 fi	
-
 if  [ "$RESET_MODE" == "TRUE" ]; then
-
 	IPTABLES=/sbin/iptables
 	$IPTABLES -F
 	$IPTABLES -F -t nat
 	$IPTABLES -X
-
 	$IPTABLES -P INPUT ACCEPT
 	$IPTABLES -P OUTPUT ACCEPT
 	$IPTABLES -P FORWARD ACCEPT
-
 	modprobe ip_conntrack
 	modprobe iptable_nat
 	modprobe ip_conntrack_ftp
 	modprobe ip_nat_ftp
-
 	echo ${FORWARD} > /proc/sys/net/ipv4/ip_forward
 	
-
+	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
+	log_record
+	
 	if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
 		echo "[BLOCK AUSTIN]..."
 		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
+			MSG="BLOCK AUSTIN"
+			log_record
 		done
 	fi
 		
@@ -221,18 +218,19 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_ROSE[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
+			MSG="BLOCK ROSE"
+			log_record
 		done
 	fi
-
 	if [ "$BLOCK_TEST" == "TRUE" ]; then
+		echo "[BLOCK TESTING]..." ; sleep 1
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
+			MSG="BLOCK TEST"
+			log_record
 		done
 	fi
-
 		$IPTABLES -t nat -A POSTROUTING -j MASQUERADE
-
 fi
-
 exit 0
