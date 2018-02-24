@@ -214,7 +214,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_conntrack_ftp
 	modprobe ip_nat_ftp
 
-	if  [ "$INTRANET_MODE" != "" ]; then
+	if  [ "$INTRANET_MODE" == "TRUE" ]; then
 		echo 0 > /proc/sys/net/ipv4/ip_forward
 		else
 		echo 1 > /proc/sys/net/ipv4/ip_forward
