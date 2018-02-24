@@ -136,7 +136,7 @@ done
 #-----------all function
 log_record () {
 
-	echo ${SCRIPT_NAME}" "${D}" :"${MSG} >> ${PATH_LOG}/check_ap.log
+	echo "$SCRIPT_NAME $D :$MSG" >> ${PATH_LOG}/check_ap.log
 
 }
 #-----------
