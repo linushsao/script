@@ -215,8 +215,12 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_nat_ftp
 
 	if  [ "$INTRANET_MODE" == "" ]; then
+		MSG="DISABLE IP_FORWARD MODE..."
+		log_record
 		echo 0 > /proc/sys/net/ipv4/ip_forward
 		else
+		MSG="ENABLE IP_FORWARD MODE..."
+		log_record
 		echo 1 > /proc/sys/net/ipv4/ip_forward
 	fi	
 	
