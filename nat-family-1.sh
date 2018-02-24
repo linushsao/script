@@ -214,7 +214,11 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_conntrack_ftp
 	modprobe ip_nat_ftp
 
-	echo 1 > /proc/sys/net/ipv4/ip_forward
+	if  [ "$INTRANET_MODE" != "" ]; then
+		echo 0 > /proc/sys/net/ipv4/ip_forward
+		else
+		echo 1 > /proc/sys/net/ipv4/ip_forward
+	fi	
 	
 	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
 	log_record
@@ -249,10 +253,8 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		done
 	fi
 
-	if  [ "$INTRANET_MODE" != "TRUE" ]; then
-		echo "[ENABLE NAT]..." ; sleep 1
 		$IPTABLES -t nat -A POSTROUTING -j MASQUERADE
-	fi
+
 fi
 
 exit 0
