@@ -14,6 +14,7 @@ CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
 CHECK_NETWORK=`cat home/linus/log/CHECK_NETWORK` # empty:disable
+FORWARD="0"
 SCRIPT_NAME="[nat-family]"
 
 PATH_LOG="/home/linus/log"
@@ -197,6 +198,15 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 	done
 fi
 
+if  [ "$INTRANET_MODE" == "" ]; then
+	MSG="DISABLE IP_FORWARD MODE..."
+	log_record
+	FORWARD="0"
+	else
+	MSG="ENABLE IP_FORWARD MODE..."
+	log_record
+	FORWARD="1"
+fi	
 
 if  [ "$RESET_MODE" == "TRUE" ]; then
 
@@ -214,15 +224,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_conntrack_ftp
 	modprobe ip_nat_ftp
 
-	if  [ "$INTRANET_MODE" == "" ]; then
-		MSG="DISABLE IP_FORWARD MODE..."
-		log_record
-		echo 0 > /proc/sys/net/ipv4/ip_forward
-		else
-		MSG="ENABLE IP_FORWARD MODE..."
-		log_record
-		echo 1 > /proc/sys/net/ipv4/ip_forward
-	fi	
+	echo ${FORWARD} > /proc/sys/net/ipv4/ip_forward
 	
 	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
 	log_record
