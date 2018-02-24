@@ -133,13 +133,6 @@ do
 	
 done
 
-#-----------all function
-log_record () {
-
-	echo "$SCRIPT_NAME $D :$MSG" >> ${PATH_LOG}/check_ap.log
-
-}
-#-----------
 sleep 1
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
@@ -147,16 +140,12 @@ if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 	ifconfig ${EXTIF}  up
 	ifconfig ${EXTIF_1}  up
 	ifconfig $INIF 192.168.0.1 netmask 255.255.255.0
-	MSG="network interface init..."
-	log_record
 
 	if  [ "$CREATE_AP" == "TRUE" ]; then
 		#create softAP
 		killall hostapd;sleep 1
 		killall dhcpd;sleep 1
 		create_ap $INIF $EXTIF Linuslab-AP 0726072652
-		MSG="CREATE AP by CREATE_AP SCRIPT"
-		log_record
 	else
 		systemctl stop haveged
 		systemctl start haveged
@@ -164,8 +153,6 @@ if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
 		dhcpd $INIF
 		killall hostapd;sleep 1
 		hostapd -dd /etc/hostapd/hostapd.conf
-		MSG="CREATE AP by MANUEL(hostapd+dhcpd)"
-		log_record
 	fi
 
 #connect to Yafinus
@@ -192,8 +179,6 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 				sleep 1
 				dhclient -v ${EXTIF_1} &
 				echo ${NMOBILES_AP[$i]} > ${PATH_LOG}/AP_ID
-				MSG="FOUND MOBILE AP ${NMOBILES_AP[$i] , trying to connecting to..."
-				log_record
 			fi
 	done
 fi
@@ -240,7 +225,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	fi
 
 	if [ "$BLOCK_TEST" == "TRUE" ]; then
-		echo "[BLOCK TESTING]..." ; sleep 1
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
