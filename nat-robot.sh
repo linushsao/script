@@ -235,7 +235,7 @@ case ${ans} in
 					elif [ "${ans2}" == "clear" ]; then
 							echo "" > ./NETHOURS_EXTRA
 					elif [ "${ans2}" == "std" ]; then
-							cat ${HOME_PATH}log/NETHOURS.conf
+							more ${HOME_PATH}log/NETHOURS.conf
 					fi
 					echo "Current EXTRA_NETHOURS :"`cat NETHOURS_EXTRA`
 				done
