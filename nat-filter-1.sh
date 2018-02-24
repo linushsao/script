@@ -373,7 +373,6 @@ elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | 
 else #start to execute command
 
 	echo "[EXECUTE MODE ]..."
-	PARA=${PARA}" --enable-reset"
 	echo  $PARA > ${PATH_LOG}/para
 	MSG="EXECUTE PARAM = | ${PARA} |"
 	log_record
