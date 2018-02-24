@@ -219,7 +219,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_ROSE[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK ROSE "${#IP_ROSE[@]}
+			MSG="BLOCK ROSE "${IP_ROSE[$i]}
 			log_record
 		done
 	fi
@@ -228,7 +228,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK TEST "${#IP_TEST[@]}
+			MSG="BLOCK TEST "${IP_TEST[$i]}
 			log_record
 		done
 	fi
