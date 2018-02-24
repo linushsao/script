@@ -21,32 +21,22 @@ PATH_LOG="/home/linus/log"
 
 NETMASK="255.255.255.0"
 
-#IP_AUSTIN="192.168.0.52"
-#IP_AUSTIN_PHONE="192.168.0.60"
-#IP_AUSTIN_PAD="192.168.0.54"
-IP_AUSTIN_PC="192.168.0.51"
 IP_AUSTIN=(
-192.168.0.51
-192.168.0.54
-192.168.0.57
+`cat ${PATH_LOG}/IP_AUSTIN.conf`
 )
+IP_AUSTIN_PC=${IP_AUSTIN[0]}
 
-#IP_ROSE="192.168.0.5x"
-#IP_ROSE_PHONE="192.168.0.58"
-#IP_ROSE_PAD="192.168.0.59"
-IP_ROSE_PC="192.168.1.55"
 IP_ROSE=(
-192.168.0.55
-192.168.0.59
-192.168.0.58
+`cat ${PATH_LOG}/IP_ROSE.conf`
 )
+IP_ROSE_PC=${IP_ROSE[0]}
 
 IP_TEST=(
-192.168.0.56
+`cat ${PATH_LOG}/IP_TEST.conf`
 )
 
 IP_PUBLIC=(
-192.168.12.134
+`cat ${PATH_LOG}/IP_PUBLIC.conf`
 )
 
 MOBILES_AP=(`cat /home/linus/log/MOBILES.conf`)
@@ -71,6 +61,15 @@ EXTIF="wlp3s0"
 EXTIF_1="wlp0s20u2"
 INIF="wlp0s29u1u3"
 INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
+
+#-----------all function
+log_record () {
+
+	echo ${SCRIPT_NAME}" "${D}" :"${MSG} >> ${PATH_LOG}/check_ap.log
+
+}
+#-----------
+
 
 MSG="++++++++++++++++++++++++++++++++[INIT START]"
 log_record
@@ -134,13 +133,6 @@ do
 	
 done
 
-#-----------all function
-log_record () {
-
-	echo ${SCRIPT_NAME}" "${D}" :"${MSG} >> ${PATH_LOG}/check_ap.log
-
-}
-#-----------
 sleep 1
 
 if  [ "$HARD_RESET_MODE" == "TRUE" ]; then
