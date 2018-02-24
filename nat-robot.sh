@@ -226,7 +226,7 @@ case ${ans} in
 				unset ans2 ans3
 				until [ "${ans2}" == "exit" -o "${ans2}" == "e" ]
 				do
-					read -p "What action do you wanna modify to extra_nethours(add/clear/exit): " ans2
+					read -p "What action do you wanna modify to extra_nethours(add/clear/standard(std)/exit): " ans2
 					if [ "${ans2}" == "add" ]; then
 						read -p "pls input the value of EXTRA_NETHOURS(day hour min-start min-stop):" ans3
 						if [ "$ans3" != "" ]; then
@@ -234,6 +234,8 @@ case ${ans} in
 						fi
 					elif [ "${ans2}" == "clear" ]; then
 							echo "" > ./NETHOURS_EXTRA
+					elif [ "${ans2}" == "std" ]; then
+							echo "" > ${HOME_PATH}log/NETHOURS.conf
 					fi
 					echo "Current EXTRA_NETHOURS :"`cat NETHOURS_EXTRA`
 				done
