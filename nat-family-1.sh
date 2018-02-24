@@ -9,7 +9,7 @@ HARD_RESET_MODE="" #TRUE:enable RESET,other:disable
 WIRED_MODE="TRUE" #TRUE:enable wired,other:wireless
 VERBOSE_MODE=""   #TRUE:enable debug mode
 MOBILE_MODE="" #TRUE:enable mobile network
-INTRANET_MODE="TRUE"  #TRUE means enable connect forward(NAT)
+INTRANET_MODE="TRUE"  #TRUE means disable ip_forward(NAT)
 CREATE_AP="" #TRUE:enable create_ap app
 BLOCK_TEST=""
 TC_MODE="" # TRUE:tc enable traffic control,other:disable
@@ -201,10 +201,12 @@ fi
 if  [ "$INTRANET_MODE" == "" ]; then
 	MSG="DISABLE IP_FORWARD MODE..."
 	log_record
+	echo $MSG
 	FORWARD="0"
 	else
 	MSG="ENABLE IP_FORWARD MODE..."
 	log_record
+	echo $MSG
 	FORWARD="1"
 fi	
 
