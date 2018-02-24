@@ -331,7 +331,7 @@ fi
 
 
 if [ "$FILTER_MODE" != "" ];then
-	FILTER_NETWORK="${FILTER_NETWORK} --enable-reset --enable-intranet"
+	FILTER_NETWORK="${FILTER_NETWORK} --enable-intranet"
 	#killall hostapd
 	echo "TURN OFF FORWARD TO INTERNET"
 	MSG="turn off FORWARD to internet"
@@ -372,6 +372,7 @@ elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | 
 else #start to execute command
 
 	echo "[EXECUTE MODE ]..."
+	PARA=${PARA}" --enable-reset"
 	echo  $PARA > ${PATH_LOG}/para
 	MSG="EXECUTE PARAM = | ${PARA} |"
 	log_record
