@@ -72,8 +72,9 @@ EXTIF_1="wlp0s20u2"
 INIF="wlp0s29u1u3"
 INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
 
-echo ""
-echo "++++++++++++++++++++++++++++++++[INIT START]"
+MSG="++++++++++++++++++++++++++++++++[INIT START]"
+log_record
+echo $MSG
 
 for var in "$@"
 do
@@ -200,7 +201,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 	modprobe ip_nat_ftp
 	echo ${FORWARD} > /proc/sys/net/ipv4/ip_forward
 	
-	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
+	MSG="RESET IPTABLES RULES & ENABLE MASQUERADE"
 	log_record
 	
 	if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
@@ -208,7 +209,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK AUSTIN"
+			MSG="BLOCK AUSTIN "${IP_AUSTIN[$i]}
 			log_record
 		done
 	fi
@@ -218,7 +219,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_ROSE[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK ROSE"
+			MSG="BLOCK ROSE "${#IP_ROSE[@]}
 			log_record
 		done
 	fi
@@ -227,7 +228,7 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK TEST"
+			MSG="BLOCK TEST "${#IP_TEST[@]}
 			log_record
 		done
 	fi
