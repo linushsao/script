@@ -199,14 +199,8 @@ if  [ "$MOBILE_MODE" == "TRUE" ]; then
 fi
 
 if  [ "$INTRANET_MODE" == "" ]; then
-	MSG="DISABLE IP_FORWARD MODE..."
-	log_record
-	echo $MSG
 	FORWARD="0"
 	else
-	MSG="ENABLE IP_FORWARD MODE..."
-	log_record
-	echo $MSG
 	FORWARD="1"
 fi	
 
@@ -228,16 +222,12 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 
 	echo ${FORWARD} > /proc/sys/net/ipv4/ip_forward
 	
-	MSG="RESET IPTABLES RULES & ENABLE IP_FORWARD"
-	log_record
-	
+
 	if [ "$BLOCK_AUSTIN" == "TRUE" ]; then
 		echo "[BLOCK AUSTIN]..."
 		for ((i=0; i<${#IP_AUSTIN[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_AUSTIN[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK AUSTIN"
-			log_record
 		done
 	fi
 		
@@ -246,8 +236,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_ROSE[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_ROSE[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK ROSE"
-			log_record
 		done
 	fi
 
@@ -256,8 +244,6 @@ if  [ "$RESET_MODE" == "TRUE" ]; then
 		for ((i=0; i<${#IP_TEST[@]}; i++))
 		do 
 			$IPTABLES -A FORWARD -s ${IP_TEST[$i]}  -o $EXTIF -j DROP
-			MSG="BLOCK TEST"
-			log_record
 		done
 	fi
 
