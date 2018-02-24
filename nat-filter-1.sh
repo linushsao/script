@@ -356,7 +356,8 @@ if ! [ -f ${PATH_LOG}/para ]; then
 fi
 OLD_PARA=`cat ${PATH_LOG}/para`
 
-echo ""
+MSG="OLD_PARA: $OLD_PARA" ; log_record
+MSG="NEW_PARA: $PARA" ; log_record
 
 if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
 
