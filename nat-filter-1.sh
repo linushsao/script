@@ -337,6 +337,8 @@ if [ "$FILTER_MODE" != "" ];then
 	MSG="turn off FORWARD to internet"
 	log_record
 	#echo "" > ${PATH_LOG}/AP_ID
+	else
+	FILTER_NETWORK="${FILTER_NETWORK} --enable-reset"
 fi
 
 
