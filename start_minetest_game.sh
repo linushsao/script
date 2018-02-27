@@ -2,6 +2,8 @@
 
 #exit 0
 
+SERVER_NAME="debian-1gb-sgp1-01"
+
 if ! [ -d /home/linus/.minetest/worlds/"$1" ]; then
 	echo "game-folder $1 is not exist!!"
 	exit 0
@@ -25,8 +27,10 @@ launch_game () {
 	cd /home/linus/.minetest/games/$game_folder/
 	echo "" > ./minetest.announce.conf
 	cat ./minetest.conf >>    ./minetest.announce.conf
-	cat /home/linus/Downloads/announce/add_announce_$world_folder.txt >> ./minetest.announce.conf
-	cat /home/linus/Downloads/announce/add_irc_$world_folder.txt >> ./minetest.announce.conf
+	if [ `hostname` == "$SERVER_NAME" ]; then
+		cat /home/linus/Downloads/announce/add_announce_$world_folder.txt >> ./minetest.announce.conf
+		cat /home/linus/Downloads/announce/add_irc_$world_folder.txt >> ./minetest.announce.conf
+	fi
 	#screen -t StableSERVER -d -m ~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &
 	#~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
 	minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
