@@ -5,9 +5,9 @@
 SERVER_NAME="debian-1gb-sgp1-01"
 
 if [ "$3" == "laptop" ]; then
-	MINETEST-SERVER="~/Downloads/src/minetest_latest/bin/minetestserver"
+	MINETEST_SERVER="minetestserver"
 	else
-	MINETEST-SERVER="minetestserver"
+	MINETEST_SERVER="/home/linus/Downloads/src/minetest_latest/bin/minetestserver"
 fi
 
 if ! [ -d /home/linus/.minetest/worlds/"$1" ]; then
@@ -39,7 +39,7 @@ launch_game () {
 	fi
 	#screen -t StableSERVER -d -m ~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &
 	#~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
-	$MINETEST-SERVER --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
+	$MINETEST_SERVER --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
 	#minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
 }
 
