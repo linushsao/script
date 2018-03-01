@@ -42,7 +42,7 @@ done
 
 
 if [ "$c1" == "" ];then
-  /home/linus/script/start_minetest_game.sh hsao restart
+  /home/linus/script/start_minetest_game.sh hsao restart laptop
 
   echo $D" restart HSAO server..." >> check_minetest.log
   else
@@ -51,7 +51,7 @@ if [ "$c1" == "" ];then
 fi
 
 if [ "$c2" == "" ];then
-  /home/linus/script/start_minetest_game.sh nc restart
+  /home/linus/script/start_minetest_game.sh nc restart laptop
 
   echo $D" restart nc server..." >> check_minetest.log
   else
@@ -60,7 +60,7 @@ if [ "$c2" == "" ];then
 fi
 
 if [ "$c4" == "" ];then
-  /home/linus/script/start_minetest_game.sh lifeofsea restart
+  /home/linus/script/start_minetest_game.sh lifeofsea restart laptop
 
   echo $D" restart SEA server..." >> check_minetest.log
   else
