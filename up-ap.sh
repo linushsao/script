@@ -2,19 +2,20 @@
 
 #exit 0
 
-EXTIF="wlp3s0"
-EXTIF_1="wlp0s20u2"
-INIF="wlp0s29u1u3"
+EXTIF="enp2s0"
+INIF="wlx74da38b92029"
 INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
 
 ifconfig $INIF 192.168.0.1
 
-systemctl stop haveged 
-systemctl start haveged 
-killall dhcpd
-dhcpd $INIF
-killall hostapd
-hostapd -dd /etc/hostapd/hostapd.conf
+echo "[ENABLE HEAVEGED...]"
+systemctl stop haveged ;sleep 1
+systemctl start haveged ;sleep 1 
+killall dhcpd ;sleep 1
+echo "[ENABLE DHCPD...]"
+dhcpd $INIF -cf etc/dhcp/dhcpd.conf ;sleep 1
+
+echo "[ENABLE MASQ...]"
 
 	PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/bin; export PATH
 	iptables -F
@@ -38,6 +39,9 @@ hostapd -dd /etc/hostapd/hostapd.conf
     echo "1" > /proc/sys/net/ipv4/ip_forward
     iptables -t nat -A POSTROUTING  -o $EXTIF -j MASQUERADE	
 
+killall hostapd ; sleep 1
+echo "[ENABLE HOSTAPD...]"
+hostapd -dd /etc/hostapd/hostapd.conf ; sleep 1
 
 
 
