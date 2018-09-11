@@ -2,16 +2,16 @@
 
 #exit 0
 
-SERVER_NAME="debian-1gb-sgp1-01"
+SERVER_NAME="Linuslab.org"
 
 if [ "$3" == "laptop" ]; then
-	MINETEST_SERVER="minetestserver"
+	MINETEST_SERVER="minetest"
 	else
 	MINETEST_SERVER="/home/linus/Downloads/src/minetest_latest/bin/minetestserver"
 fi
 
 if ! [ -d /home/linus/.minetest/worlds/"$1" ]; then
-	echo "game-folder $1 is not exist!!"
+	echo "world-folder $1 is not exist!!"
 	exit 0
 fi
 
@@ -37,10 +37,10 @@ launch_game () {
 		cat /home/linus/Downloads/announce/add_announce_$world_folder.txt >> ./minetest.announce.conf
 		cat /home/linus/Downloads/announce/add_irc_$world_folder.txt >> ./minetest.announce.conf
 	fi
-	#screen -t StableSERVER -d -m ~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &
-	#~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
-	$MINETEST_SERVER --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
-	#minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf &	
+
+	#screen -t StableSERVER -d -m ~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf & > /home/linus/log/launch_game.log
+
+	$MINETEST_SERVER --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf > /home/linus/log/launch_game.log
 }
 
 check_param () {
@@ -59,6 +59,7 @@ check_param () {
 		elif [ "$2" == "kill" ]
 		then
 		kill_task
+
 		exit 0
 	fi
 	

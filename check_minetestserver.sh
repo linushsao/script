@@ -1,7 +1,10 @@
 #!/bin/bash
 
-
-#exit 0
+CHECK=`cat /home/linus/log/if_backup`
+echo $CHECK
+if [ "$CHECK" == "BACKUP" ];then
+exit 0
+fi
 
 D=`date +%F@%R`
 
@@ -22,10 +25,7 @@ echo $c6
 c21=`netstat -an | grep "0.0.0.0:30021"`
 echo $c21
 
-/home/linus/script/check_irssi.sh
-
 if [ "$c6" == "" ];then
-#oull from github
 cd /home/linus/.minetest/games/marsu/
 git reset --hard HEAD
 git pull
@@ -36,12 +36,13 @@ cp -rf /home/linus/.minetest/secret/* .
 /home/linus/script/start_minetest_game.sh marsu restart
 
 echo $D" restart MARS server..." >> check_minetest.log
-else
-echo $D" MARS server Already starting..." >> check_minetest.log
-
-sleep 15
-a=`pidof minetestserver`
-echo $a
-renice -10 $a
 
 fi
+
+if [ "$c1" == "" ];then
+
+/home/linus/script/start_minetest_game.sh hsao restart
+/home/linus/script/my_log.sh  " restart HSAO server..." 
+
+fi
+

@@ -5,6 +5,8 @@ INIF="wlx74da38b92029"
 ESSID="Linuslab-AP"
 PASSWD="0726072652"
 
+echo "" > /home/linus/log/check_route
+
 ####
 echo "[IPTABLES...]"
 

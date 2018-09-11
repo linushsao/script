@@ -2,26 +2,24 @@
 
 #exit 0
 
-EXTIF="enp2s0"
-INIF="eth0"
-INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
-SQUID_SERVER="127.0.0.1"
-SQUID_PORT="8888"
+EXTIF="enp4s0f2"
+INIF="enp0s20u1u2"
+WIRELESSIF="wlp3s0"
 
-#ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 up ; sleep 1
+LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
+
 echo "[ENABLE HAVEGED...]"
 systemctl stop haveged ;sleep 1
 systemctl start haveged ;sleep 1 
 
 #restart ethercard
 echo "[RESTART ETHER_CARD...]"
-ifconfig enp2s0 down ;sleep 1
-ifconfig enp2s0 up   ;sleep 1 
-ifconfig eth0 down   ;sleep 1
-ifconfig eth0 up     ;sleep 1
-/etc/init.d/networking restart
+#ifconfig $INIF down   ;sleep 1
+#ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 up ; sleep 1
+#/home/linus/script/up_wlp3s0.sh ; sleep 1
 
 echo "1" > /proc/sys/net/ipv4/ip_forward
+
 modprobe ip_tables
 modprobe ip_nat_ftp
 modprobe ip_nat_irc
@@ -31,35 +29,51 @@ modprobe ip_conntrack_irc
 /sbin/iptables -F
 /sbin/iptables -X
 /sbin/iptables -Z
+/sbin/iptables -t mangle -F
+/sbin/iptables -t mangle -X
 /sbin/iptables -F -t nat
 /sbin/iptables -X -t nat
 /sbin/iptables -Z -t nat
 /sbin/iptables -P INPUT   DROP
 /sbin/iptables -P OUTPUT  ACCEPT
-/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables -P FORWARD ACCEPT 
 /sbin/iptables -t nat -P PREROUTING  ACCEPT
 /sbin/iptables -t nat -P POSTROUTING ACCEPT
 /sbin/iptables -t nat -P OUTPUT      ACCEPT
 
 iptables -A INPUT -i $INIF -j ACCEPT
-iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -i $WIRELESSIF -j ACCEPT
 
 #允許本機往外連線
 /sbin/iptables -A INPUT -i lo -j ACCEPT
 /sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 #允許本機服務開啟
+iptables -A INPUT -p TCP -i $EXTIF --dport 80 -j ACCEPT # HTTP
+iptables -A INPUT -p UDP -i $EXTIF --dport 80 -j ACCEPT
+iptables -A INPUT -p TCP -i $WIRELESSIF --dport 20 -j ACCEPT # FTP
+iptables -A INPUT -p UDP -i $WIRELESSIF --dport 20 -j ACCEPT
+iptables -A INPUT -p TCP -i $WIRELESSIF --dport 21 -j ACCEPT 
+iptables -A INPUT -p UDP -i $WIRELESSIF --dport 21 -j ACCEPT
+
 iptables -A INPUT -p TCP -i $EXTIF --dport 443 -j ACCEPT # SSH
 iptables -A INPUT -p UDP -i $EXTIF --dport 443 -j ACCEPT
+iptables -A INPUT -p TCP -i $EXTIF --dport 30016 -j ACCEPT # MINETESTSERVER
+iptables -A INPUT -p UDP -i $EXTIF --dport 30016 -j ACCEPT
+iptables -A INPUT -p TCP -i $EXTIF --dport 30000 -j ACCEPT # MINETESTSERVER
+iptables -A INPUT -p UDP -i $EXTIF --dport 30000 -j ACCEPT
+iptables -A INPUT -p TCP -i $WIRELESSIF --dport 3128 -j ACCEPT   #PROXY
+iptables -A INPUT -p UDP -i $WIRELESSIF --dport 3128 -j ACCEPT
+iptables -A INPUT -p TCP -i $EXTIF --dport 8080 -j ACCEPT   #MOTION
+iptables -A INPUT -p UDP -i $EXTIF --dport 8080 -j ACCEPT
 
-#本機http連線導向local proxy
-#iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8888
 #其他主機導向proxy
-#iptables -t nat -A PREROUTING -i $INIF -s 192.168.0.0/24 -p tcp \
-#         --dport 80 -j REDIRECT --to-port 8888 
+#iptables -t nat -A PREROUTING -i $INIF  -p tcp --dport 80 -j REDIRECT --to-port 3128 
+#iptables -t nat -A PREROUTING -i $INIF  -p tcp --dport 443 -j REDIRECT --to-port 3128
 
 #允許成為NAT
 /sbin/iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o $EXTIF -j MASQUERADE
+/sbin/iptables -t nat -A POSTROUTING -s 192.168.10.0/24 -o $EXTIF -j MASQUERADE
 
 echo "[DONE...]"
 
