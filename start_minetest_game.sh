@@ -2,10 +2,10 @@
 
 #exit 0
 
-SERVER_NAME="Linuslab.org"
+HOST=`hostname`
 
-if [ "$3" == "laptop" ]; then
-	MINETEST_SERVER="minetest"
+if [ "$HOST" == "Debian-vio" ]; then
+	MINETEST_SERVER=" minetestserver"
 	else
 	MINETEST_SERVER="/home/linus/Downloads/src/minetest_latest/bin/minetestserver"
 fi
