@@ -4,11 +4,7 @@
 
 HOST=`hostname`
 
-if [ "$HOST" == "Debian-vio" ]; then
-	MINETEST_SERVER=" minetestserver"
-	else
 	MINETEST_SERVER="/home/linus/Downloads/src/minetest_latest/bin/minetestserver"
-fi
 
 if ! [ -d /home/linus/.minetest/worlds/"$1" ]; then
 	echo "world-folder $1 is not exist!!"
@@ -33,10 +29,9 @@ launch_game () {
 	cd /home/linus/.minetest/games/$game_folder/
 	echo "" > ./minetest.announce.conf
 	cat ./minetest.conf >>    ./minetest.announce.conf
-	if [ `hostname` == "$SERVER_NAME" ]; then
-		cat /home/linus/Downloads/announce/add_announce_$world_folder.txt >> ./minetest.announce.conf
-		cat /home/linus/Downloads/announce/add_irc_$world_folder.txt >> ./minetest.announce.conf
-	fi
+
+	cat /home/linus/Downloads/announce/add_announce_$world_folder.txt >> ./minetest.announce.conf
+	cat /home/linus/Downloads/announce/add_irc_$world_folder.txt >> ./minetest.announce.conf
 
 	#screen -t StableSERVER -d -m ~/Downloads/src/minetest_latest/bin/minetestserver --worldname $world_folder --port $port --logfile /home/linus/log/$world_folder.log --config /home/linus/.minetest/games/$game_folder/minetest.announce.conf & > /home/linus/log/launch_game.log
 
