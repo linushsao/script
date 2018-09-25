@@ -2,8 +2,8 @@
 
 #exit 0
 
-My_ExtIF="enp4s0f2"
-My_InIF="enp0s20u1u2"
+My_ExtIF="enp2s0"
+My_InIF="enx00e04c3600d2"
 My_Wireless1="wlp3s0"
 My_Wireless2="wlp0s20u1u3"
 

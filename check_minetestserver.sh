@@ -35,7 +35,7 @@ cp -rf /home/linus/.minetest/secret/* .
 
 /home/linus/script/start_minetest_game.sh marsu restart
 
-echo $D" restart MARS server..." >> check_minetest.log
+/home/linus/script/my_log.sh " restart MARS server..." 
 
 fi
 

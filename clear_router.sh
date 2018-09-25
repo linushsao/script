@@ -2,8 +2,8 @@
 
 #exit 0
 #export network interface name
-EXTIF="enp4s0f2"
-INIF="enp0s20u1u2"
+EXTIF="enp2s0"
+INIF="enx00e04c3600d2"
 WIRELESSIF="wlp3s0"
 
 #INNET="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
