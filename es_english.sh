@@ -10,6 +10,8 @@ case ${1} in
 		mplayer "${FOLDER}/${entry}"
 	done
 
+	/home/linus/script/my_log.sh " ES_ENGLISH:play ${entry}..."
+
 	;;
 
   "stop") #STOP ENGLISH
@@ -23,6 +25,8 @@ case ${1} in
     		kill ${filter} ;sleep 1
     		echo $filter
 	done
+
+	/home/linus/script/my_log.sh " ES_ENGLISH:terminated..."
 
 	;;
 

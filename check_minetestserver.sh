@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#exit 0
+
 CHECK=`cat /home/linus/log/if_backup`
 echo $CHECK
 if [ "$CHECK" == "BACKUP" ];then
