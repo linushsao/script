@@ -12,7 +12,8 @@ case ${1} in
   do
 	for entry in `ls ${FOLDER_ALL}`; do
 		#move pin to last ES
-    	if [ ${MARK} == "" ] && [ `/home/linus/log/ES_CURRENT` == "${entry}" ];then
+    	if [ ${MARK} == "" ] && [ `/home/linus/log/ES_CURRENT` == "${entry}" ]
+    	then
 			MARK="${entry}"
 		fi
     	if [ "${MARK}" ~= "" ];then
