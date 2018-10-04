@@ -11,12 +11,14 @@ case ${1} in
   until [ `cat /home/linus/log/ES_PLAY` == "" ]
   do
 	for entry in `ls ${FOLDER_ALL}`; do
-		#move pin to last ES
-    	if [ ${MARK} == "" ] && [ `/home/linus/log/ES_CURRENT` == "${entry}" ]
-    	then
+	#move pin to last ES
+	echo $entry
+
+	    	if [ "${MARK}" == "" ] && [ "`cat /home/linus/log/ES_CURRENT`" == "${entry}" ]
+    		then
 			MARK="${entry}"
 		fi
-    	if [ "${MARK}" ~= "" ];then
+ 		if [ "${MARK}" != "" ];then
 			mplayer "${FOLDER_ALL}/${entry}"
 			echo $entry > /home/linus/log/ES_CURRENT
 			/home/linus/script/my_log.sh " ES_ENGLISH:play ${entry}..."
