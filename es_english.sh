@@ -11,6 +11,9 @@ case ${1} in
   until [ `cat /home/linus/log/ES_PLAY` == "" ]
   do
 	for entry in `ls ${FOLDER_ALL}`; do
+	if [ "`cat /home/linus/log/ES_PLAY`" == "" ];then
+	exit 0
+	fi
 	#move pin to last ES
 	echo $entry
 
@@ -21,7 +24,7 @@ case ${1} in
  		if [ "${MARK}" != "" ];then
 			mplayer "${FOLDER_ALL}/${entry}"
 			echo $entry > /home/linus/log/ES_CURRENT
-			/home/linus/script/my_log.sh " ES_ENGLISH:play ${entry}..."
+			/home/linus/script/my_log.sh " ES_ENGLISH_PLAYALL:play ${entry}..."
 		fi
 	done
   done
@@ -31,28 +34,22 @@ case ${1} in
   until [ `cat /home/linus/log/ES_PLAY` == "" ]
   do
 	for entry in `ls ${FOLDER}`; do
+	        if [ "`cat /home/linus/log/ES_PLAY`" == "" ];then
+	        exit 0
+       		fi
     		#echo $entry
 		mplayer "${FOLDER}/${entry}"
 	done
   done
 
-	/home/linus/script/my_log.sh " ES_ENGLISH:play ${entry}..."
+	/home/linus/script/my_log.sh " ES_ENGLISH_PLAY:play ${entry}..."
 
 	;;
 
   "stop") #STOP ENGLISH
 
-	object="mplayer"
-	filter=" "
 	echo "" > /home/linus/log/ES_PLAY
-	until [ "${filter}" == "" ]  
-  		do
-    		filter=`pidof ${object}`
-    		kill ${filter} ;sleep 1
-	done
-
-	/home/linus/script/my_log.sh " ES_ENGLISH:terminated..."
-
+        /home/linus/script/kill_ap.sh mplayer
 	;;
 
   *)   # 其實就相當於萬用字元，0~無窮多個任意字元之意！
