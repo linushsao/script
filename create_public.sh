@@ -3,7 +3,7 @@
 #exit 0
 
 My_ExtIF="enp2s0"
-My_InIF="enx00e04c3600d2"
+My_InIF="enx00e04b39d58c"
 My_Wireless1="wlp3s0"
 My_Wireless2="wlp0s20u1u3"
 

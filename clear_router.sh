@@ -3,7 +3,7 @@
 #exit 0
 
 EXTIF="enp2s0"
-INIF="enx00e04c3600d2"
+INIF="enx00e04b39d58c"
 WIRELESSIF="wlp3s0"
 
 LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
@@ -14,7 +14,7 @@ systemctl start haveged ;sleep 1
 
 #restart ethercard
 echo "[RESTART ETHER_CARD...]"
-#ifconfig $INIF down   ;sleep 1
+ifconfig $INIF down   ;sleep 1
 #ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 up ; sleep 1
 #/home/linus/script/up_wlp3s0.sh ; sleep 1
 
@@ -46,7 +46,7 @@ iptables -A INPUT -i $WIRELESSIF -j ACCEPT
 
 #允許本機往外連線
 /sbin/iptables -A INPUT -i lo -j ACCEPT
-/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+#/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 #允許本機服務開啟
 iptables -A INPUT -p TCP -i $EXTIF --dport 80 -j ACCEPT # HTTP

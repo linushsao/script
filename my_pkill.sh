@@ -4,4 +4,4 @@ pkill X
 
 D=`date +%F@%R`
 
-echo $D" pkill x..." >> ~/.pass
+/home/linus/script/my_log.sh " pkill x..." 

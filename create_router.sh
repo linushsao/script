@@ -3,7 +3,7 @@
 #exit 0
 
 EXTIF="enp2s0"
-INIF="enx00e04c3600d2"
+INIF="enx00e04b39d58c"
 WIRELESSIF="wlp3s0"
 
 LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
