@@ -22,7 +22,7 @@ case ${1} in
 			MARK="${entry}"
 		fi
  		if [ "${MARK}" != "" ];then
-			mplayer "${FOLDER_ALL}/${entry}"
+			mplayer "${FOLDER_ALL}/${entry}" -volume 70
 			echo $entry > /home/linus/log/ES_CURRENT
 			/home/linus/script/my_log.sh " ES_ENGLISH_PLAYALL:play ${entry}..."
 		fi
@@ -38,7 +38,7 @@ case ${1} in
 	        exit 0
        		fi
     		#echo $entry
-		mplayer "${FOLDER}/${entry}"
+		mplayer "${FOLDER}/${entry}" -volume 70
 	done
   done
 

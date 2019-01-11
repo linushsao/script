@@ -16,8 +16,6 @@ case $1 in
 	;;
 esac
 
-echo "[Launch Proxy $CHECK ...]"
-
 cd /etc/tinyproxy
 cp tinyproxy.conf.${CHECK} tinyproxy.conf
 #killall tinyproxy;sleep 1
