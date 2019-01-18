@@ -4,6 +4,7 @@
 FOLDER="/home/linus/es_english_now"
 FOLDER_ALL="/home/linus/es_english"
 MARK=""
+LOG_NAME="ES_ENGLISH"
 
 case ${1} in
   "play_all") #PLAY ENGLISH_ALL
@@ -24,7 +25,7 @@ case ${1} in
  		if [ "${MARK}" != "" ];then
 			mplayer "${FOLDER_ALL}/${entry}" -volume 70
 			echo $entry > /home/linus/log/ES_CURRENT
-			/home/linus/script/my_log.sh " ES_ENGLISH_PLAYALL:play ${entry}..."
+			/home/linus/script/my_log.sh " ES_ENGLISH_PLAYALL:play ${entry}..." ${LOG_NAME}
 		fi
 	done
   done
@@ -42,7 +43,7 @@ case ${1} in
 	done
   done
 
-	/home/linus/script/my_log.sh " ES_ENGLISH_PLAY:play ${entry}..."
+	/home/linus/script/my_log.sh " ES_ENGLISH_PLAY:play ${entry}..." ${LOG_NAME}
 
 	;;
 

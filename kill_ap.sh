@@ -10,5 +10,5 @@
     		kill ${filter} ;sleep 1
 	done
 
-	/home/linus/script/my_log.sh " ES_ENGLISH:terminated..."
+	/home/linus/script/my_log.sh " ${object} is terminated..." KILLAP
 
