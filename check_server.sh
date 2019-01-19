@@ -51,7 +51,7 @@ echo "TCPDUMP CHECK:"$c1
 if [ "$c1" == "" ];then
   echo C1
   echo `date +%F@%R`  >> ${PATH_LOG}/TCPDUMP
-  tcpdump -w ${PATH_LOG}/`date +%F`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
+  tcpdump -w ${PATH_LOG}/pcap/`date +%F`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
   else
   /home/linus/script/my_log.sh "TCPDUMP was working" "TCPDUMP"
   echo C2
