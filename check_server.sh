@@ -28,22 +28,22 @@ CHECK2=`ifconfig | grep ${INIF}`
 /home/linus/script/my_log.sh  "CHECK ${AP_NAME} RESOULT: [${CHECK}]" "INIF_DOWN"
 /home/linus/script/my_log.sh  "CHECK ${INIF} RESOULT: [${CHECK2}]"   "INIF_DOWN"
 
-if [ "${CHECK1}" = "" ]; then
+if [ "${CHECK1}" == "" ]; then
 ifconfig $INIF down
 /home/linus/script/my_log.sh "`date +%c`:${INIF} forced switch DOWN" "INIF_DOWN"
 else
 /home/linus/script/my_log.sh "`date +%c`:${INIF} allowed" "INIF_DOWN"
 fi
 
-if [ "${CHECK}" = "" ] && [ "${CHECK1}" = "" ]; then
-${PATH_SCRIPT}/kill_ap.sh hostapd
-sleep 1
-PASSWORD=`date +%F`
-/home/linus/script/my_log.sh " RESUME ${AP_NAME}: ${PASSWORD}"
-ifconfig ${WIRELESSIF1} down ; sleep 1
-ifconfig ${WIRELESSIF1} up ; sleep 1
-/home/linus/Downloads/create_ap/create_ap ${WIRELESSIF1} ${EXTIF} HarukiMurakami ${PASSWORD}  >/dev/null 2>&1
-fi
+#if [ "${CHECK}" == "" ] && [ "${CHECK1}" == "" ]; then
+#${PATH_SCRIPT}/kill_ap.sh hostapd
+#sleep 1
+#PASSWORD=`date +%F`
+#/home/linus/script/my_log.sh " RESUME ${AP_NAME} / PASSWORD: ${PASSWORD}"
+#ifconfig ${WIRELESSIF1} down ; sleep 1
+#ifconfig ${WIRELESSIF1} up ; sleep 1
+#/home/linus/Downloads/create_ap/create_ap ${WIRELESSIF1} ${EXTIF} ${AP_NAME} ${PASSWORD}  >/dev/null 2>&1
+#fi
 
 #check for TCPDUMP
 c1=`pidof tcpdump`
@@ -51,7 +51,7 @@ echo "TCPDUMP CHECK:"$c1
 if [ "$c1" == "" ];then
   echo C1
   echo `date +%F@%R`  >> ${PATH_LOG}/TCPDUMP
-  tcpdump -w ${PATH_LOG}/pcap/`date +%F`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
+  tcpdump -w ${PATH_LOG}/pcap/`date +%d`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
   else
   /home/linus/script/my_log.sh "TCPDUMP was working" "TCPDUMP"
   echo C2
