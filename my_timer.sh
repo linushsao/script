@@ -4,6 +4,7 @@ PATH_SCRIPT="/home/linus/script"
 
 case $1 in
 	"now")
+	for i in `atq | awk '{print $1}'`;do atrm $i;done
 	CHECK1="$2"
 	killall es_english.sh
 	${PATH_SCRIPT}/kill_ap.sh mplayer
@@ -17,6 +18,7 @@ case $1 in
 
 	;;
 	"clock")
+	for i in `atq | awk '{print $1}'`;do atrm $i;done
 	CHECK1="$2"
         CHECK2="$3"
         CHECK3="$4"
