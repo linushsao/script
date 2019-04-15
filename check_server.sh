@@ -29,11 +29,11 @@ CHECK2=`ifconfig | grep ${INIF}`
 /home/linus/script/my_log.sh  "CHECK ${INIF} RESOULT: [${CHECK2}]"   "INIF_DOWN"
 
 if [ "${CHECK1}" == "" ]; then
-ifconfig $INIF down
-/home/linus/script/my_log.sh "`date +%c`:${INIF} forced switch DOWN" "INIF_DOWN"
-else
-/home/linus/script/my_log.sh "`date +%c`:${INIF} allowed" "INIF_DOWN"
-fi
+#ifconfig $INIF down
+#/home/linus/script/my_log.sh "`date +%c`:${INIF} forced switch DOWN" "INIF_DOWN"
+#else
+#/home/linus/script/my_log.sh "`date +%c`:${INIF} allowed" "INIF_DOWN"
+#fi
 
 #if [ "${CHECK}" == "" ] && [ "${CHECK1}" == "" ]; then
 #${PATH_SCRIPT}/kill_ap.sh hostapd

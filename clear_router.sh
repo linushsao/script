@@ -15,22 +15,18 @@ systemctl stop haveged ;sleep 1
 systemctl start haveged ;sleep 1 
 
 #restart ethercard
-echo "[RESTART ETHER_CARD...]"
+echo "[DISALBE IP_FORWARD...]"
+echo "0" > /proc/sys/net/ipv4/ip_forward
 
-echo "1" > /proc/sys/net/ipv4/ip_forward
-ifconfig $INIF down
+#ifconfig $INIF down
 
 echo "" > /home/linus/log/STAT
 
-echo "[ENABLE TEMP AP...]"
+#echo "[ENABLE TEMP AP...]"
 #create TEMP_AP
-${PATH_SCRIPT}/kill_ap.sh hostapd
-sleep 1
-PASSWORD=`date +%F`
-/home/linus/script/my_log.sh " CLEAR ROUTER: ${PASSWORD}"
-/home/linus/script/switch_proxy.sh block_hard
-
-ifconfig ${WIRELESSIF1} down ; sleep 1
-ifconfig ${WIRELESSIF1} up ; sleep 1
-/home/linus/Downloads/create_ap/create_ap ${WIRELESSIF1} ${EXTIF} HarukiMurakami ${PASSWORD} >/dev/null 2>&1
+#${PATH_SCRIPT}/kill_ap.sh hostapd
+#sleep 1
+#PASSWORD=`date +%F`
+#/home/linus/script/my_log.sh " CLEAR ROUTER: ${PASSWORD}"
+#/home/linus/script/switch_proxy.sh block_hard
 

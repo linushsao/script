@@ -58,8 +58,6 @@ iptables -A INPUT -p UDP -i $WIRELESSIF --dport 21 -j ACCEPT
 
 iptables -A INPUT -p TCP -i $EXTIF --dport 443 -j ACCEPT # SSH
 iptables -A INPUT -p UDP -i $EXTIF --dport 443 -j ACCEPT
-iptables -A INPUT -p TCP -i $INIF --dport 443 -j ACCEPT # SSH
-iptables -A INPUT -p UDP -i $INIF --dport 443 -j ACCEPT
 iptables -A INPUT -p TCP -i $EXTIF --dport 30016 -j ACCEPT # MINETESTSERVER
 iptables -A INPUT -p UDP -i $EXTIF --dport 30016 -j ACCEPT
 iptables -A INPUT -p TCP -i $EXTIF --dport 30000 -j ACCEPT # MINETESTSERVER

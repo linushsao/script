@@ -15,7 +15,6 @@ case $1 in
         at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_pkill.sh
 	COUNT=`expr "${CHECK1}" - "10"`
 	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh 
-
 	;;
 	"clock")
 	for i in `atq | awk '{print $1}'`;do atrm $i;done
@@ -31,6 +30,13 @@ case $1 in
         at ${CHECK2} < ${PATH_SCRIPT}/my_pkill.sh
         at ${CHECK3} < ${PATH_SCRIPT}/my_pika-end.sh 
 	;;
+
+       "suspend")
+        for i in `atq | awk '{print $1}'`;do atrm $i;done
+	${PATH_SCRIPT}/clear_router.sh
+	${PATH_SCRIPT}/my_log.sh "Timer stop counting..."
+        ;;
+
 	*)
 	echo "wrong param{now TIME_PERIOD / clock TIME_START TIME_STOP TIME_ALARM}"
 	exit 0
