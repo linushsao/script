@@ -1,13 +1,12 @@
 #!/bin/bash
 #
 
-CHECK = `ps -aux | grep minetest | grep marsu`
+CHECK=`ps -aux | grep minetest | grep marsu`
 
 if [ "${CHECK}" == "" ]; then
-        /home/linus/script/my_log.sh "MARSU server is needed to be checked!!!"
+        /home/linus/script/my_log.sh "MARSU server is needed to be checked!!!" marsu_backup.log
         exit 0
 fi
-
 
 NAME=`date -I`
 filter=" "

@@ -43,8 +43,9 @@ fi
 
 if [ "$c1" == "" ];then
 
-/home/linus/script/start_minetest_game.sh hsao restart
-/home/linus/script/my_log.sh  " restart HSAO server..." 
+#/home/linus/script/start_minetest_game.sh hsao restart
+#/home/linus/script/my_log.sh  " restart HSAO server..." 
 
 fi
 
+exit 0
