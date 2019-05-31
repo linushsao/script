@@ -9,9 +9,9 @@ ALL_CMD="[available cmd: check/network/log/flag/tools/help]"
 RETURN_TXT="Pls press any key to return main menu. "
 EXT_INF="enp2s0f1"
 IN_INF="wlp3s0"
+MY_USER=$USER
 
-
-NAME="AUSTIN ROSE"
+NAME="austin rose linus"
 
 ##ALL FUNCTIONS
 
@@ -42,44 +42,15 @@ flag_modify () {
 
 flag_remove () {
 
-		read -p "Who's ${check_flag} data do you wanna ${check_flag1}(<NAME>/all/exit): " ans1
-			if [ ${ans1} == "all" ]; then
-				for n in $NAME
-				do
-					rm ${check_flag}_${n}
-					echo "${check_flag} of ${n} ${check_flag1} completely."
-				done
-			else
-				for n in $NAME
-				do
-					if [ ${n} == ${ans1} ]; then
-					rm ${check_flag}_${n}
-					echo "${check_flag} of ${n} ${check_flag1} completely."
-					fi
-				done
-			fi
+					rm ${check_flag}_${MY_USER}
+					echo "${check_flag} of ${MY_USER} TURN OFF completely."
 
 }
 
 flag_add () {
 
-		read -p "Who's ${check_flag} data do you wanna ${check_flag1}(<NAME>/all/exit): " ans1
-			if [ ${ans1} == "all" ]; then
-				for n in $NAME
-				do
-					touch ${check_flag}_${n}
-					echo "${check_flag} of ${n} ${check_flag1} completely."
-				done
-			else
-				for n in $NAME
-				do
-					if [ ${n} == ${ans1} ]; then
-					touch ${check_flag}_${n}
-					echo "${check_flag} of ${n} ${check_flag1} completely."
-					fi
-				done
-			fi
-
+					touch ${check_flag}_${MY_USER}
+					echo "${check_flag} of ${MY_USER} TURN ON completely."
 }
 
 check_switch () {
@@ -103,7 +74,7 @@ do
 	clear;unset ans1
 	echo "###############WELCOME TO LINUS's PLANET#################"
 	echo 
-	echo "Hi, i'm LISA ,nice to meet you." ;echo
+	echo "Hi ${MY_USER}, i'm LISA ,nice to meet you." ;echo
 	echo ${ALL_CMD}
 	read -p "Please input command or (e)xit to exit this program: " ans
 
@@ -113,7 +84,7 @@ case ${ans} in
 	until [ "${ans1}" == "exit" -o "${ans1}" == "e" ]
 	do
 				for n in $NAME
-					do
+				do
 				#echo "${n}'s TC :"`cat tc_${n}`
 				echo "${n}'s NC :"`cat nc_${n}`
                                 echo "${n}'s TL :"`cat tl_${n}`

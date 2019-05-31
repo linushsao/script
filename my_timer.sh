@@ -31,7 +31,6 @@ case $1 in
 	for i in `atq | awk '{print $1}'`;do atrm $i;done
 	CHECK1="$2"
         CHECK2="$3"
-        CHECK3="$4"
         killall es_english.sh
         ${PATH_SCRIPT}/kill_ap.sh mplayer
         at ${CHECK1} < ${PATH_SCRIPT}/my_pika-start.sh
@@ -41,10 +40,10 @@ case $1 in
         at ${CHECK2} < ${PATH_SCRIPT}/my_pkill.sh
 
         COUNT=`expr "${CHECK2}" - "10"`
-        at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh
+        at now +${COUNT}minutes < ${PATH_SCRIPT}/my_pika-end.sh
 
         COUNT=`expr "${CHECK2}" - "1"`
-        at now "+${COUNT}minutes" < echo "" > ${PATH_LOG}/TIMER
+        at now +${COUNT}minutes < echo "" > ${PATH_LOG}/TIMER
 
 	echo "ON" > ${PATH_LOG}/TIMER
 	;;

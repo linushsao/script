@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #exit 0
+MY_ID="CLEAR ROUTER"
 
 EXTIF="enp2s0"
 INIF="enx00e04b39d58c"
@@ -14,6 +15,7 @@ LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET="
 #check if timer is on
         a=`cat ${PATH_LOG}/TIMER`
         if [ "$a" != "" ];then
+		echo "TIMER is on,can't disable network"
                 exit 0 
         fi
 
@@ -29,12 +31,14 @@ echo "0" > /proc/sys/net/ipv4/ip_forward
 
 echo "" > /home/linus/log/STAT
 
+/home/linus/script/switch_proxy.sh block_hard
+
 #echo "[ENABLE TEMP AP...]"
 #create TEMP_AP
 #${PATH_SCRIPT}/kill_ap.sh hostapd
 #sleep 1
 #PASSWORD=`date +%F`
 #/home/linus/script/my_log.sh " CLEAR ROUTER: ${PASSWORD}"
-/home/linus/script/my_log.sh "[CLEAR ROUTER] ENABLE"
+/home/linus/script/my_log.sh "[${MY_ID}] ENABLE"
 #/home/linus/script/switch_proxy.sh block_hard
 

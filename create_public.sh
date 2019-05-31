@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #exit 0
+MY_ID="CREATE PUBLIC"
 
 My_ExtIF="enp2s0"
 My_InIF="enx00e04b39d58c"
@@ -17,6 +18,6 @@ ifconfig $My_InIF 192.168.0.1 netmask 255.255.255.0 ; sleep 1
 
 /home/linus/script/switch_proxy.sh unblock
  
-/home/linus/script/my_log.sh "[CREATE_ROUTER]Free Online Time..."
+/home/linus/script/my_log.sh "[${MY_ID}] Free Online Time..."
 
 echo "ON" > /home/linus/log/STAT

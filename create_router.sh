@@ -69,7 +69,13 @@ iptables -A INPUT -p UDP -i $WIRELESSIF --dport 3128 -j ACCEPT
 iptables -A INPUT -p TCP -i $EXTIF --dport 8080 -j ACCEPT   #MOTION
 iptables -A INPUT -p UDP -i $EXTIF --dport 8080 -j ACCEPT
 
-#其他主機導向proxy
+#本機及其他主機導向proxy
+iptables -A INPUT -p TCP -i lo --dport 3128 -j ACCEPT   #PROXY
+iptables -A INPUT -p UDP -i lo --dport 3128 -j ACCEPT
+
+/sbin/iptables -t nat -A PREROUTING  -i lo -p tcp --dport 80 -j REDIRECT --to-port 3128
+/sbin/iptables -t nat -A PREROUTING  -i lo -p udp --dport 80 -j REDIRECT --to-port 3128
+
 #iptables -t nat -A PREROUTING -i $INIF  -p tcp --dport 80 -j REDIRECT --to-port 3128 
 #iptables -t nat -A PREROUTING -i $INIF  -p tcp --dport 443 -j REDIRECT --to-port 3128
 

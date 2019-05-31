@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #BASIC CONFIGURE
-FILTER_ROSE="--block-rose" 
-FILTER_AUSTIN="--block-austin"
 FILTER_MODE="TRUE" #TRUE mean BLOCK AUSTIN & ROSE
 FILTER_TC="--enable-tc"
 GAME_SWITCH="TRUE" #TRUE means opennet from minetest
@@ -24,48 +22,15 @@ NETHOURS_EXTRA=`cat /home/linus/log/NETHOURS_EXTRA`
 
 #NET_NOLIMITED,for kid to search books or others
 NETHOURS_NOLIMITED=(
-1 9 0 59
-1 10 0 59
-1 11 0 30
-2 9 0 59
-2 10 0 59
-2 11 0 30
-3 9 0 59
-3 10 0 59
-3 11 0 30
-4 9 0 59
-4 10 0 59
-4 11 0 30
-5 9 0 59
-5 10 0 59
-5 11 0 30
-6 9 0 59
-6 10 0 59
-6 11 0 30
-7 9 0 59
-7 10 0 59
-7 11 0 30
+`cat /home/linus/log/NETHOURS_NOLIMITED`
 )
 
 #time sheet,time limited per day. regulat time x 1.5
 #day minutes
 
-#TIME_LIMITED_SHEET=(
-#1 45
-#2 45
-#3 45
-#4 45
-#5 45
-#6 180
-#7 180)
 TIME_LIMITED_SHEET=(
-1 150
-2 150
-3 150
-4 150
-5 150
-6 180
-7 180)
+`cat /home/linus/log/TIME_LIMITED_SHEET`
+)
 
 #get today's data
 DTIME=`date +%F@%R`
@@ -73,60 +38,26 @@ NOW=`date +%u`
 HOUR=`date +%H`
 MIN=`date +%M`
 
+NAME="austin rose linus"
+
 echo ""
 echo "++++++++++++++++++++++++++++++++[FILTER START]"
 echo ""
-
-
-#check param
-echo "[CHECKING PARAM]..."
-for var in "$@"
-do
-    #echo "$var"
-    if [ "$var" == "--disable-test" ]
-		then
-		echo "[configure:DISABLE_TEST]"
-		TEST_MODE=""
-		elif [ "$var" == "--enable-gameswitch" ]
-		then
-		echo "[configure:ENABLE_GAMESWITCH]"
-		GAME_SWITCH="TRUE"
-		elif [ "$var" == "--enable-reset" ]
-		then
-		echo "[configure:ENABLE_reset]"
-		RESET_MODE="--enable-reset"
-		elif [ "$var" == "--enable-hardreset" ]
-		then
-		echo "[configure:ENABLE_HARDreset]"
-		HARDRESET_MODE="--enable-hardreset"
-		elif [ "$var" == "--enable-force" ]
-		then 
-		echo "[configure:ENABLE_force]"
-		FORCE_MODE="--enable-force"
-		elif [ "$var" == "--enable-extra" ]
-		then
-		echo "[configure:ENABLE_EXTRA]"
-		EXTRA_MODE="TRUE"
-		else
-		echo "Wrong param : " $var
-		exit 0
-	fi
-done
 
 #[ALL functions]
 #-------------------------------------------------------------
 #function to check if current time is online time.
 check_nethours () {
 	if [ "$D1" == "$NOW" ]; then
-			if [ `expr "$D2" - "$HOUR"` == "0" ]; then
-					for ((ii="$D3";ii<="$D4";ii++))
-					do
-						if [ `expr "$ii" - "$MIN"` == "0" ]; then
-							echo "###MATCH###"
-							FILTER_MODE=""
-						fi
-					done
-			fi
+		if [ `expr "$D2" - "$HOUR"` == "0" ]; then
+			for ((ii="$D3";ii<="$D4";ii++))
+			do
+				if [ `expr "$ii" - "$MIN"` == "0" ]; then
+					echo "###MATCH###"
+					FILTER_MODE=""
+				fi
+			done
+		fi
 	fi
 }
 
@@ -225,8 +156,6 @@ do
 done
 
 
-NAME="ROSE AUSTIN"
-
 #check if kid'd nettime should be bring up.
 	for name in $NAME
 	do
@@ -241,7 +170,6 @@ NAME="ROSE AUSTIN"
 	done	
 
 # ready to decreasing network time of austin or rose
-	#NAME="ROSE AUSTIN"
 
 	echo "[CHECKING if ROSE&AUSTIN have ONELINE TIME]..."
 	#check if austin&rose have net time
@@ -265,6 +193,7 @@ NAME="ROSE AUSTIN"
 		echo "FILTER_MODE: ${FILTER_MODE} ..."
 		COIN=`cat /home/linus/log/nc_"$name"`
 	
+		#have nc & have tl,decreasing nc...
 		if [ "$COIN" != "0" ] && [ "$FILTER_MODE" != "TRUE" ]
 			then
 			if [ -f /home/linus/log/switch_"$name" ]; then
@@ -273,16 +202,11 @@ NAME="ROSE AUSTIN"
 				COUNT1=`expr "$TL" + "$OP"` #check evey 1 minute,increase the time_limited.
 				echo "$COUNT" > /home/linus/log/nc_"$name"
 				echo "$COUNT1" > /home/linus/log/tl_"$name"
-				if [ "$name" == "AUSTIN" ]; then
-					FILTER_AUSTIN=""
-					elif [ "$name" == "ROSE" ]; then
-					FILTER_ROSE=""
-				fi
 			fi
 		
 		else
 			if [ "$COIN" != "0" ]; then
-				echo "[$name has no NC ...]"
+				echo "[$name has no TL ...]"
 			fi
 			
 			if [ "$COIN" == "0" ] && [ -f /home/linus/log/switch_"$name" ]; then
@@ -291,6 +215,7 @@ NAME="ROSE AUSTIN"
 			fi
 				
 		fi
+
 		ls -al ../log/ | grep $name
 		echo "NC: "`cat ../log/nc_$name`
 		echo "TL/TOTAL: "`cat ../log/tl_$name` "/ "$TODAY_LIMITED
@@ -298,52 +223,4 @@ NAME="ROSE AUSTIN"
 
 	done
 
-EXTRA=`cat /home/linus/log/extra_mode` #ignore time
-if [ "$(echo -e "${EXTRA}" | tr -d '[:space:]')" != "" ]; then
-	FILTER_MODE=""
-	else
-	echo "[DISABLE EXTRA_MODE ]..."
-fi	
-
-#ready to set command.
-
-exit 0
-
-echo "[STARTING TO CONFIURE FILTER PARAM]..echo."
-PARA=$FILTER_ROSE" "$FILTER_AUSTIN" "$FILTER_TC
-
-if [ "$FORCE_MODE" != "" ]; then
-	echo "" > /home/linus/log/para
-	echo "[FORCE MODE,REASE OLD PARA file]..."
-fi
-
-if ! [ -f /home/linus/log/para ]; then
-    touch /home/linus/log/para
-	echo "[CREATE NEW EMPTY PARA file]..."
-fi
-OLD_PARA=`cat /home/linus/log/para`
-
-echo ""
-
-if [ "$TEST_MODE" == "TRUE" ]; then #only for test,not execute command
-
-	echo "[TEST MODE | CURRENT PARA CONF AS FELLOWING]..."
-	echo $PARA
-	exit 0
-elif [ "$(echo -e "${PARA}" | tr -d '[:space:]')" == "$(echo -e "${OLD_PARA}" | tr -d '[:space:]')" ]; then
-	echo "NOT execute script,just show the same param: "$PARA
-	echo $DTIME ": DUPLUCATE PARAM = |" $PARA "|" >> /home/linus/log/net-filter.log
-	exit 0
-	
-else #start to execute command
-
-	echo "[EXECUTE MODE ]..."
-	
-	/home/linus/script/nat-family.sh $PARA
-	echo  $PARA > /home/linus/log/para
-	echo $DTIME ": EXECUTE PARAM = |" $PARA "|" >> /home/linus/log/net-filter.log
-
-fi
-
-echo "++++++++++++++++++++++++++++++++[FILTER END]"
 

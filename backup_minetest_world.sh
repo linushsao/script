@@ -2,6 +2,7 @@
 #
 
 CHECK=`ps -aux | grep minetest | grep marsu`
+BACKUP_PATH="/home/linus/backup/marsu"
 
 if [ "${CHECK}" == "" ]; then
         /home/linus/script/my_log.sh "MARSU server is needed to be checked!!!" marsu_backup.log
@@ -20,11 +21,8 @@ done
 
 echo "BACKUP" > /home/linus/log/if_backup
 cd /home/linus/.minetest/worlds
-tar zcvf /home/linus/Downloads/"worlds-"$NAME.tgz * 
+tar zcvf ${BACKUP_PATH}/worlds-${NAME}.tgz * 
 /home/linus/script/my_log.sh "Daily Backup for MARSU server... "
-
-#cd /var/www/html/mars/
-#tar zcvf /home/linus/Downloads/"logs-"$NAME.tgz *
 
 echo "" > /home/linus/log/if_backup
 
