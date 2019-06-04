@@ -66,8 +66,8 @@ iptables -A INPUT -p TCP -i $EXTIF --dport 30000 -j ACCEPT # MINETESTSERVER
 iptables -A INPUT -p UDP -i $EXTIF --dport 30000 -j ACCEPT
 iptables -A INPUT -p TCP -i $WIRELESSIF --dport 3128 -j ACCEPT   #PROXY
 iptables -A INPUT -p UDP -i $WIRELESSIF --dport 3128 -j ACCEPT
-iptables -A INPUT -p TCP -i $EXTIF --dport 8080 -j ACCEPT   #MOTION
-iptables -A INPUT -p UDP -i $EXTIF --dport 8080 -j ACCEPT
+#iptables -A INPUT -p TCP -i $EXTIF --dport 8080 -j ACCEPT   #MOTION
+#iptables -A INPUT -p UDP -i $EXTIF --dport 8080 -j ACCEPT
 
 #本機及其他主機導向proxy
 iptables -A INPUT -p TCP -i lo --dport 3128 -j ACCEPT   #PROXY

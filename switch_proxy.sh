@@ -24,4 +24,4 @@ systemctl stop tinyproxy
 sleep 1
 systemctl start tinyproxy
 
-/home/linus/script/my_log.sh " ENABLE PROXY ${CHECK}..."
+/home/linus/script/my_log.sh "[Switch Proxy] ${CHECK}..."

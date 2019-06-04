@@ -13,10 +13,9 @@ PATH_LOG="/home/linus/log"
 LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET=""
 
 #check if timer is on
-        a=`cat ${PATH_LOG}/TIMER`
-        if [ "$a" != "" ];then
-		echo "TIMER is on,can't disable network"
-                exit 0 
+        if [ -f /home/linus/log/TIMER ]; then
+                echo "TIMER is on,can't disable network"
+                exit 0
         fi
 
 echo "[ENABLE HAVEGED...]"

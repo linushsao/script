@@ -2,6 +2,7 @@
 
 PATH_SCRIPT="/home/linus/script"
 PATH_LOG="/home/linus/log"
+FLAG="ON"
 
 case $1 in
 	"now")
@@ -11,6 +12,8 @@ case $1 in
 	${PATH_SCRIPT}/kill_ap.sh mplayer
 	${PATH_SCRIPT}/create_public.sh
         ${PATH_SCRIPT}/my_pika-start.sh
+	${PATH_SCRIPT}/timer_launch.sh
+
 	at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/clear_router.sh
         at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_random-passwd.sh
         at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_pkill.sh
@@ -18,9 +21,7 @@ case $1 in
 	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh 
 
         COUNT=`expr "${CHECK1}" - "1"`
-        at now "+${COUNT}minutes" < echo "" > ${PATH_LOG}/TIMER
-
-	echo "ON" > ${PATH_LOG}/TIMER
+        at now "+${COUNT}minutes" < ${PATH_SCRIPT}/timer_erase.sh
 	;;
 
        "osnow")
@@ -29,23 +30,26 @@ case $1 in
 
 	"clock")
 	for i in `atq | awk '{print $1}'`;do atrm $i;done
-	CHECK1="$2"
-        CHECK2="$3"
+	START="$2"
+        PERIOD="$3"
         killall es_english.sh
         ${PATH_SCRIPT}/kill_ap.sh mplayer
-        at ${CHECK1} < ${PATH_SCRIPT}/my_pika-start.sh
-        at ${CHECK1} < ${PATH_SCRIPT}/create_public.sh
-        at ${CHECK2} < ${PATH_SCRIPT}/clear_router.sh	
-        at ${CHECK2} < ${PATH_SCRIPT}/my_random-passwd.sh  
-        at ${CHECK2} < ${PATH_SCRIPT}/my_pkill.sh
+        at ${START} < ${PATH_SCRIPT}/my_pika-start.sh
+        at ${START} < ${PATH_SCRIPT}/create_public.sh
+	at ${START} < ${PATH_LOG}/set_end.sh
+	at ${START} < ${PATH_SCRIPT}/timer_launch.sh
 
-        COUNT=`expr "${CHECK2}" - "10"`
-        at now +${COUNT}minutes < ${PATH_SCRIPT}/my_pika-end.sh
+	#prepare script
+        echo "${PATH_SCRIPT}/timer_erase.sh;sleep 1" >> ${PATH_LOG}/temp.sh
+        echo "${PATH_SCRIPT}/clear_router.sh" > ${PATH_LOG}/temp.sh
+	echo "${PATH_SCRIPT}/my_random-passwd.sh" >> ${PATH_LOG}/temp.sh
+	echo "${PATH_SCRIPT}/my_pkill.sh" >> ${PATH_LOG}/temp.sh
+	echo "at now +${PERIOD}minutes < ${PATH_LOG}/temp.sh" < ${PATH_LOG}/set_end.sh
 
-        COUNT=`expr "${CHECK2}" - "1"`
-        at now +${COUNT}minutes < echo "" > ${PATH_LOG}/TIMER
-
-	echo "ON" > ${PATH_LOG}/TIMER
+        #at ${CHECK2} < ${PATH_SCRIPT}/clear_router.sh	
+        #at ${CHECK2} < ${PATH_SCRIPT}/my_random-passwd.sh  
+        #at ${CHECK2} < ${PATH_SCRIPT}/my_pkill.sh
+	#echo "ON" > ${PATH_LOG}/TIMER
 	;;
 
        "suspend")
@@ -53,13 +57,23 @@ case $1 in
 	${PATH_SCRIPT}/clear_router.sh
 	${PATH_SCRIPT}/my_log.sh "Timer stop counting..."
 
-	echo "" > ${PATH_LOG}/TIMER
+	${PATH_SCRIPT}/timer_erase.sh
+        ;;
+
+       "check_flag")
+	#check if timer is on
+        if [ -f /home/linus/log/TIMER ]; then
+                echo "TIMER is on,can't disable network"
+		else
+		echo "TIMER is off,can disable network"
+        fi
+
         ;;
 
        "ossuspend")
         rm ${PATH_LOG}/switch_AUSTIN
 
-	echo "" > ${PATH_LOG}/TIMER
+	${PATH_SCRIPT}/timer_erase.sh
 	;;
 	*)
 	echo "wrong param{now TIME_PERIOD / clock TIME_START TIME_STOP TIME_ALARM}"
@@ -67,4 +81,4 @@ case $1 in
 	;;
 esac
 
-/home/linus/script/my_log.sh " ENABLE TIMER: $1 $2 $3 $4 "
+/home/linus/script/my_log.sh " ENABLE TIMER: $1 $2 $3 $4 / TIMER:`cat ${PATH_LOG}/TIMER`"

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+~/script/es_english.sh stop
+
 bbc[0]=""
 bbc[1]="http://www.listenlive.eu/bbcradio1.m3u"
 bbc[2]="http://www.listenlive.eu/bbcradio1x.m3u"

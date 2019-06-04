@@ -20,13 +20,13 @@ if [ "$c1" == "" ];then
 fi
 
 #check for wireless
-${PATH_SCRIPT}/kill_ap.sh iwlist
-CHECK=`iwlist ${WIRELESSIF0} scanning | grep ESSID | grep ${AP_NAME} `
-CHECK1=`cat /home/linus/log/STAT`
-CHECK2=`ifconfig | grep ${INIF}`
+#${PATH_SCRIPT}/kill_ap.sh iwlist
+#CHECK=`iwlist ${WIRELESSIF0} scanning | grep ESSID | grep ${AP_NAME} `
+#CHECK1=`cat /home/linus/log/STAT`
+#CHECK2=`ifconfig | grep ${INIF}`
 
-/home/linus/script/my_log.sh  "CHECK ${AP_NAME} RESOULT: [${CHECK}]" "INIF_DOWN"
-/home/linus/script/my_log.sh  "CHECK ${INIF} RESOULT: [${CHECK2}]"   "INIF_DOWN"
+#/home/linus/script/my_log.sh  "CHECK ${AP_NAME} RESOULT: [${CHECK}]" "INIF_DOWN"
+#/home/linus/script/my_log.sh  "CHECK ${INIF} RESOULT: [${CHECK2}]"   "INIF_DOWN"
 
 if [ "${CHECK1}" == "" ]; then
 #ifconfig $INIF down
