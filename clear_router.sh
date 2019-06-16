@@ -18,9 +18,8 @@ LOCAL_NETWORK="192.168.0.0/24" # 若無內部網域介面，請填寫成 INNET="
                 exit 0
         fi
 
-echo "[ENABLE HAVEGED...]"
+echo "[DISABLE HAVEGED...]"
 systemctl stop haveged ;sleep 1
-systemctl start haveged ;sleep 1 
 
 #restart ethercard
 echo "[DISALBE IP_FORWARD...]"
@@ -38,6 +37,6 @@ echo "" > /home/linus/log/STAT
 #sleep 1
 #PASSWORD=`date +%F`
 #/home/linus/script/my_log.sh " CLEAR ROUTER: ${PASSWORD}"
-/home/linus/script/my_log.sh "[${MY_ID}] ENABLE"
+/home/linus/script/my_log.sh "[${MY_ID}] Disconnect to AP..."
 #/home/linus/script/switch_proxy.sh block_hard
 

@@ -3,9 +3,10 @@
 
 CHECK=`ps -aux | grep minetest | grep marsu`
 BACKUP_PATH="/home/linus/backup/marsu"
+LOG_PATH="/home/linus/log"
 
 if [ "${CHECK}" == "" ]; then
-        /home/linus/script/my_log.sh "MARSU server is needed to be checked!!!" marsu_backup.log
+        /home/linus/script/my_log.sh "MARSU server is fail down,it's needed to be checked!!!" ${LOG_PATH}/marsu_backup.log
         exit 0
 fi
 

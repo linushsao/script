@@ -1,11 +1,10 @@
 #!/bin/bash
 
+NAME_APP="My passwd"   
 USER="kids"
 PASSWORD="apple2"
-D=`date +%F@%R`
+
 PATH_LOG="/home/linus/log/.pass"
-echo $D" "$PASSWORD >> $PATH_LOG 
 echo "${USER}:${PASSWORD}" | chpasswd
 
-
-/home/linus/script/my_log.sh " Recovery password..."
+/home/linus/script/my_log.sh "[${NAME_APP}] passwd:${PASSWORD}"

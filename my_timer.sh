@@ -34,17 +34,18 @@ case $1 in
         PERIOD="$3"
         killall es_english.sh
         ${PATH_SCRIPT}/kill_ap.sh mplayer
-        at ${START} < ${PATH_SCRIPT}/my_pika-start.sh
-        at ${START} < ${PATH_SCRIPT}/create_public.sh
-	at ${START} < ${PATH_LOG}/set_end.sh
-	at ${START} < ${PATH_SCRIPT}/timer_launch.sh
 
 	#prepare script
-        echo "${PATH_SCRIPT}/timer_erase.sh;sleep 1" >> ${PATH_LOG}/temp.sh
-        echo "${PATH_SCRIPT}/clear_router.sh" > ${PATH_LOG}/temp.sh
+        echo "${PATH_SCRIPT}/timer_erase.sh;sleep 1" > ${PATH_LOG}/temp.sh
+        echo "${PATH_SCRIPT}/clear_router.sh" >> ${PATH_LOG}/temp.sh
 	echo "${PATH_SCRIPT}/my_random-passwd.sh" >> ${PATH_LOG}/temp.sh
 	echo "${PATH_SCRIPT}/my_pkill.sh" >> ${PATH_LOG}/temp.sh
-	echo "at now +${PERIOD}minutes < ${PATH_LOG}/temp.sh" < ${PATH_LOG}/set_end.sh
+	echo "at now +${PERIOD}minutes < ${PATH_LOG}/temp.sh" > ${PATH_LOG}/set_end.sh
+
+        at ${START} < ${PATH_SCRIPT}/my_pika-start.sh
+        at ${START} < ${PATH_SCRIPT}/create_public.sh
+        at ${START} < ${PATH_LOG}/set_end.sh
+        at ${START} < ${PATH_SCRIPT}/timer_launch.sh
 
         #at ${CHECK2} < ${PATH_SCRIPT}/clear_router.sh	
         #at ${CHECK2} < ${PATH_SCRIPT}/my_random-passwd.sh  
@@ -54,10 +55,10 @@ case $1 in
 
        "suspend")
         for i in `atq | awk '{print $1}'`;do atrm $i;done
+	${PATH_SCRIPT}/timer_erase.sh;sleep 1
 	${PATH_SCRIPT}/clear_router.sh
 	${PATH_SCRIPT}/my_log.sh "Timer stop counting..."
 
-	${PATH_SCRIPT}/timer_erase.sh
         ;;
 
        "check_flag")
@@ -81,4 +82,4 @@ case $1 in
 	;;
 esac
 
-/home/linus/script/my_log.sh " ENABLE TIMER: $1 $2 $3 $4 / TIMER:`cat ${PATH_LOG}/TIMER`"
+/home/linus/script/my_log.sh "[TIMER Configure] $1 $2 $3 $4 "
