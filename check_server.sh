@@ -2,13 +2,15 @@
 #
 #exit 0
 
-EXTIF="enp2s0"
-INIF="enx00e04b39d58c"
-WIRELESSIF0="wlp3s0"
-WIRELESSIF1="wlx74da38b92029"
 PATH_SCRIPT="/home/linus/script"
 PATH_LOG="/home/linus/log"
-AP_NAME="HarukiMurakami"
+CONF_DIR="/home/linus/conf"
+
+EXTIF=`cat ${CONF_DIR}/EXTIF`
+INIF=`cat ${CONF_DIR}/INIF`
+WIRELESSIF=`cat ${CONF_DIR}/WIRELESSIF`
+WIRELESSIF_1=`cat ${CONF_DIR}/WIRELESSIF_1`
+AP_NAME="temp_ap"
 
 #check for proxy
 APP_PATH="/home/linus/src/tinyproxy/bin/tinyproxy -c /etc/tinyproxy/tinyproxy.conf -d"
@@ -19,31 +21,17 @@ if [ "$c1" == "" ];then
   /home/linus/script/my_log.sh "[RESUME PROXY...]"
 fi
 
-#check for wireless
-#${PATH_SCRIPT}/kill_ap.sh iwlist
-#CHECK=`iwlist ${WIRELESSIF0} scanning | grep ESSID | grep ${AP_NAME} `
-#CHECK1=`cat /home/linus/log/STAT`
-#CHECK2=`ifconfig | grep ${INIF}`
+#check for temp_ap 
+${PATH_SCRIPT}/kill_ap.sh iwlist
+ifconfig ${WIRELESSIF} up;sleep 1
+CHECK=`iwlist ${WIRELESSIF} scanning | grep ESSID | grep ${AP_NAME} `
 
-#/home/linus/script/my_log.sh  "CHECK ${AP_NAME} RESOULT: [${CHECK}]" "INIF_DOWN"
-#/home/linus/script/my_log.sh  "CHECK ${INIF} RESOULT: [${CHECK2}]"   "INIF_DOWN"
-
-if [ "${CHECK1}" == "" ]; then
-#ifconfig $INIF down
-#/home/linus/script/my_log.sh "`date +%c`:${INIF} forced switch DOWN" "INIF_DOWN"
-#else
-#/home/linus/script/my_log.sh "`date +%c`:${INIF} allowed" "INIF_DOWN"
-#fi
-
-#if [ "${CHECK}" == "" ] && [ "${CHECK1}" == "" ]; then
-#${PATH_SCRIPT}/kill_ap.sh hostapd
-#sleep 1
-#PASSWORD=`date +%F`
-#/home/linus/script/my_log.sh " RESUME ${AP_NAME} / PASSWORD: ${PASSWORD}"
-#ifconfig ${WIRELESSIF1} down ; sleep 1
-#ifconfig ${WIRELESSIF1} up ; sleep 1
-#/home/linus/Downloads/create_ap/create_ap ${WIRELESSIF1} ${EXTIF} ${AP_NAME} ${PASSWORD}  >/dev/null 2>&1
-#fi
+if [ "${CHECK}" == "" ]; then
+	killall hostapd
+	ifconfig ${WIRELESSIF_1} up;sleep 1
+	${PATH_SCRIPT}/my_wireless.sh ${WIRELESSIF_1} ${EXTIF} ${AP_NAME}
+        /home/linus/script/my_log.sh "[RESUME TEMP_AP...]"
+fi
 
 #check for TCPDUMP
 c1=`pidof tcpdump`
@@ -51,7 +39,7 @@ echo "TCPDUMP CHECK:"$c1
 if [ "$c1" == "" ];then
   echo C1
   echo `date +%F@%R`  >> ${PATH_LOG}/TCPDUMP
-  tcpdump -w ${PATH_LOG}/pcap/`date +%d`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
+#  tcpdump -w ${PATH_LOG}/pcap/`date +%d`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
   else
   /home/linus/script/my_log.sh "TCPDUMP was working" "TCPDUMP"
   echo C2

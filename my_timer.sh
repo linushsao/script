@@ -15,8 +15,8 @@ case $1 in
 	${PATH_SCRIPT}/timer_launch.sh
 
 	at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/clear_router.sh
-        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_random-passwd.sh
-        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_pkill.sh
+#        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_random-passwd.sh
+#        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_pkill.sh
 	COUNT=`expr "${CHECK1}" - "10"`
 	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh 
 
@@ -38,8 +38,8 @@ case $1 in
 	#prepare script
         echo "${PATH_SCRIPT}/timer_erase.sh;sleep 1" > ${PATH_LOG}/temp.sh
         echo "${PATH_SCRIPT}/clear_router.sh" >> ${PATH_LOG}/temp.sh
-	echo "${PATH_SCRIPT}/my_random-passwd.sh" >> ${PATH_LOG}/temp.sh
-	echo "${PATH_SCRIPT}/my_pkill.sh" >> ${PATH_LOG}/temp.sh
+#	echo "${PATH_SCRIPT}/my_random-passwd.sh" >> ${PATH_LOG}/temp.sh
+#	echo "${PATH_SCRIPT}/my_pkill.sh" >> ${PATH_LOG}/temp.sh
 	echo "at now +${PERIOD}minutes < ${PATH_LOG}/temp.sh" > ${PATH_LOG}/set_end.sh
 
         at ${START} < ${PATH_SCRIPT}/my_pika-start.sh

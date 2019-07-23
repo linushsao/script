@@ -1,47 +1,29 @@
 #!/bin/bash
 
 #exit 0
-MOD_AP="" #not disable ap
-MOD_TEMPAP=""
-
 CONF_DIR="/home/linus/conf"
 
 EXTIF=`cat ${CONF_DIR}/EXTIF`
 INIF=`cat ${CONF_DIR}/INIF`
 WIRELESSIF=`cat ${CONF_DIR}/WIRELESSIF`
 WIRELESSIF_1=`cat ${CONF_DIR}/WIRELESSIF_1`
+
 MINETESTSERVER_IP="192.168.12.134"
 MINETESTSERVER_PORT="30016"
 PROXY_PORT="8888"
 
-NETWORK_TEMPAP="192.168.12.1/24"
-NETWORK_AP="192.168.0.1/24" 
-
-#check param
-echo "[CHECKING PARAM]..."
-for var in "$@"
-do
-    #echo "$var"
-    if [ "$var" == "--disable-ap" ]
-                then
-                MOD_AP="TRUE"
-                elif [ "$var" == "--disable-tempap" ]
-                then
-                MOD_TEMPAP="TRUE"
-                else
-                echo "Wrong param : " $var
-                exit 0
-        fi
-done
+IP_TEMPAP="192.168.12.1"
+IP_LOCAL="192.168.0.1" 
 
 echo "[ENABLE HAVEGED...]"
 systemctl stop haveged ;sleep 1
 systemctl start haveged ;sleep 1 
 
-ifconfig $INIF down   ;sleep 1
-ifconfig $INIF up     ;sleep 1
-ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 ; sleep 1
-
+#restart ethercard
+echo "[RESTART ETHER_CARD...]"
+#ifconfig $INIF down   ;sleep 1
+#ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 up ; sleep 1
+#/home/linus/script/up_wlp3s0.sh ; sleep 1
 
 echo "1" > /proc/sys/net/ipv4/ip_forward
 
@@ -118,14 +100,8 @@ iptables -t nat -A PREROUTING  -p udp --dport 80 -j DNAT --to-destination ${MINE
 #iptables -t nat -A PREROUTING -i $INIF  -p tcp --dport 443 -j REDIRECT --to-port 3128
 
 #允許成為NAT
-
-if [ "$MOD_TEMPAP" == "" ]; then
-/sbin/iptables -t nat -A POSTROUTING -s $NETWORK_TEMPAP -o $EXTIF -j MASQUERADE
-fi
-
-if [ "$MOD_AP" == "" ]; then
-/sbin/iptables -t nat -A POSTROUTING -s $NETWORK_AP  -o $EXTIF -j MASQUERADE
-fi
+#/sbin/iptables -t nat -A POSTROUTING -s ${IP_LOCAL} -o $EXTIF -j MASQUERADE
+/sbin/iptables -t nat -A POSTROUTING -s ${IP_TEMPAP} -o $EXTIF -j MASQUERADE
 
 echo "[DONE...]"
 
