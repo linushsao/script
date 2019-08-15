@@ -2,8 +2,7 @@
 
 MY_ID="CREATE TEMP WIRELESS"
 
-#PASSWD=`date +%Y%m%d`
-PASSWD="20190814"
+PASSWD=`date +%Y%m%d`
 EXTIF=$2
 INIF=$1
 ESSID=$3

@@ -23,6 +23,7 @@ MINECRAFTSERVER_PORT="25565"
 
 NETWORK_TEMPAP="192.168.12.1/24"
 NETWORK_AP="192.168.0.1/24" 
+#
 
 #check param
 echo "[CHECKING PARAM]..."
@@ -42,8 +43,8 @@ do
 done
 
 echo "[ENABLE HAVEGED...]"
-systemctl stop haveged ;sleep 1
-systemctl start haveged ;sleep 1 
+systemctl stop haveged 
+systemctl start haveged  
 
 ifconfig $INIF down   ;sleep 1
 ifconfig $INIF up     ;sleep 1
@@ -51,16 +52,15 @@ ifconfig $INIF 192.168.0.1 netmask 255.255.255.0 ; sleep 1
 
 
 # 1. 先載入一些有用的模組
-  modules="ip_tables iptable_nat ip_nat_ftp ip_nat_irc ip_conntrack 
-ip_conntrack_ftp ip_conntrack_irc"
-  for mod in $modules
-  do
+modules="ip_tables iptable_nat ip_nat_ftp ip_nat_irc ip_conntrack 
+	 ip_conntrack_ftp ip_conntrack_irc"
+for mod in $modules
+do
       testmod=`lsmod | grep "^${mod} " | awk '{print $1}'`
       if [ "$testmod" == "" ]; then
             modprobe $mod
       fi
-  done
-
+done
 
 /sbin/iptables -F
 /sbin/iptables -X
@@ -82,7 +82,7 @@ ip_conntrack_ftp ip_conntrack_irc"
         echo "1" > $i
   done
   for i in /proc/sys/net/ipv4/conf/*/{accept_source_route,accept_redirects,\
-send_redirects}; do
+	send_redirects}; do
         echo "0" > $i
   done
 
@@ -105,8 +105,6 @@ send_redirects}; do
   done
 
 
-
-
 #允許本機往外連線
 /sbin/iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -i $INIF -j ACCEPT
@@ -114,6 +112,11 @@ iptables -A INPUT -i $WIRELESSIF -j ACCEPT
 iptables -A INPUT -i $WIRELESSIF_1 -j ACCEPT
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
+#允許服務進入
+iptables -A INPUT -p TCP -i $EXTIF --dport 443 -j ACCEPT # SSH
+iptables -A INPUT -p UDP -i $EXTIF --dport 443 -j ACCEPT
+iptables -A INPUT -p TCP -i $INIF --dport 443 -j ACCEPT # SSH
+iptables -A INPUT -p UDP -i $INIF --dport 443 -j ACCEPT
 
 
 ##[ROUTER主機導向內網主機]
@@ -132,9 +135,15 @@ iptables -t nat -A PREROUTING  -p udp --dport ${MINECRAFTSERVER_PORT} -j DNAT --
 
 echo "1" > /proc/sys/net/ipv4/ip_forward
 
-/sbin/iptables -t nat -A POSTROUTING -s $NETWORK_TEMPAP -o $EXTIF -j MASQUERADE
+if [ "${MOD_TEMPAP}" == "" ]; then
+	/sbin/iptables -t nat -A POSTROUTING -s $NETWORK_TEMPAP -o $EXTIF -j MASQUERADE
+fi
 
+if [ "${MOD_AP}" == "" ]; then
 /sbin/iptables -t nat -A POSTROUTING -s $NETWORK_AP  -o $EXTIF -j MASQUERADE
+else
+echo "[DISABLE NETWORK....]"
+fi
 
 echo "[DONE...]"
 
