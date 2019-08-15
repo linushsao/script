@@ -21,7 +21,7 @@ echo "[DISALBE IP_FORWARD...]"
 echo "" > /home/linus/log/STAT
 
 /home/linus/script/switch_proxy.sh block_hard
-/home/linus/script/create_routerr.sh --disable-ap
+/home/linus/script/create_router.sh --disable-ap
 
 /home/linus/script/my_log.sh "[${MY_ID}] Disconnect to LinusLAB-AP..."
 

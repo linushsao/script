@@ -22,40 +22,39 @@ if [ "$c1" == "" ];then
 fi
 
 #check for temp_ap 
-${PATH_SCRIPT}/kill_ap.sh iwlist
-ifconfig ${WIRELESSIF} up;sleep 1
-CHECK=`iwlist ${WIRELESSIF} scanning | grep ESSID | grep ${AP_NAME} `
+#${PATH_SCRIPT}/kill_ap.sh iwlist
+#ifconfig ${WIRELESSIF} up;sleep 1
+#CHECK=`iwlist ${WIRELESSIF} scanning | grep ESSID | grep ${AP_NAME} `
 
-if [ "${CHECK}" == "" ]; then
-	killall hostapd
-	ifconfig ${WIRELESSIF_1} up;sleep 1
-	${PATH_SCRIPT}/my_wireless.sh ${WIRELESSIF_1} ${EXTIF} ${AP_NAME}
-        /home/linus/script/my_log.sh "[RESUME TEMP_AP...]"
-fi
+#if [ "${CHECK}" == "" ]; then
+#	killall hostapd
+#	ifconfig ${WIRELESSIF_1} up;sleep 1
+#	${PATH_SCRIPT}/my_wireless.sh ${WIRELESSIF_1} ${EXTIF} ${AP_NAME}
+#        /home/linus/script/my_log.sh "[RESUME TEMP_AP...]"
+#fi
 
 #check for TCPDUMP
-c1=`pidof tcpdump`
-echo "TCPDUMP CHECK:"$c1
-if [ "$c1" == "" ];then
-  echo C1
-  echo `date +%F@%R`  >> ${PATH_LOG}/TCPDUMP
+#c1=`pidof tcpdump`
+#echo "TCPDUMP CHECK:"$c1
+#if [ "$c1" == "" ];then
+#  echo C1
+#  echo `date +%F@%R`  >> ${PATH_LOG}/TCPDUMP
 #  tcpdump -w ${PATH_LOG}/pcap/`date +%d`.pcap -i ${INIF} 2>>${PATH_LOG}/TCPDUMP
-  else
-  /home/linus/script/my_log.sh "TCPDUMP was working" "TCPDUMP"
-  echo C2
-fi
-
+#  else
+#  /home/linus/script/my_log.sh "TCPDUMP was working" "TCPDUMP"
+#  echo C2
+#fi
 
 #check for ADSL 
-CHECK=`ifconfig | grep "124.11.64.47"`
-if [ "$CHECK" == "" ];then
-  /home/linus/script/up-adsl.sh
-  /home/linus/script/my_log.sh "RESUME EXT INTERNET INTERFACE..."
-fi
-
-#check for INFERFACE
-#CHECK=`ifconfig | grep "192.168.0.1"`
+#CHECK=`ifconfig | grep "124.11.64.47"`
 #if [ "$CHECK" == "" ];then
-#  /home/linus/script/create_public.sh
-#  /home/linus/script/my_log.sh "RESUME IN INTERNET INTERFACE..."
+#  /home/linus/script/up-adsl.sh
+#  /home/linus/script/my_log.sh "RESUME EXT INTERNET INTERFACE..."
 #fi
+
+check for INFERFACE
+CHECK=`ifconfig | grep "192.168.0.1"`
+if [ "$CHECK" == "" ];then
+  /home/linus/script/create_public.sh
+  /home/linus/script/my_log.sh "RESUME IN INTERNET INTERFACE..."
+fi

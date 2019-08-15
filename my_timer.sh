@@ -12,7 +12,8 @@ case $1 in
 	${PATH_SCRIPT}/kill_ap.sh mplayer
 	${PATH_SCRIPT}/create_public.sh
         ${PATH_SCRIPT}/my_pika-start.sh
-	${PATH_SCRIPT}/timer_launch.sh
+#	${PATH_SCRIPT}/timer_launch.sh
+        ${PATH_SCRIPT}/my_switch.sh on
 
 	at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/clear_router.sh
 #        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_random-passwd.sh
@@ -21,7 +22,7 @@ case $1 in
 	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh 
 
         COUNT=`expr "${CHECK1}" - "1"`
-        at now "+${COUNT}minutes" < ${PATH_SCRIPT}/timer_erase.sh
+        at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_switch.sh off
 	;;
 
        "osnow")
@@ -54,12 +55,25 @@ case $1 in
 	;;
 
        "suspend")
-        for i in `atq | awk '{print $1}'`;do atrm $i;done
-	${PATH_SCRIPT}/timer_erase.sh;sleep 1
+	MSG="Timer stop counting..."
+        #for i in `atq | awk '{print $1}'`;do atrm $i;done
+	${PATH_SCRIPT}/my_switch.sh off;sleep 1
 	${PATH_SCRIPT}/clear_router.sh
-	${PATH_SCRIPT}/my_log.sh "Timer stop counting..."
-
+	${PATH_SCRIPT}/my_log.sh ${MSG}
+	echo "[${MSG}]"
+	${PATH_SCRIPT}/my_pika-end.sh
         ;;
+
+       "resum")
+        MSG="Timer restart counting..."
+        #for i in `atq | awk '{print $1}'`;do atrm $i;done
+        ${PATH_SCRIPT}/my_switch.sh on;sleep 1
+        ${PATH_SCRIPT}/create_public.sh
+        ${PATH_SCRIPT}/my_log.sh ${MSG}
+        echo "[${MSG}]"
+	${PATH_SCRIPT}/my_pika-start.sh
+        ;;
+
 
        "check_flag")
 	#check if timer is on
