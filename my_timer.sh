@@ -11,17 +11,15 @@ case $1 in
 	killall es_english.sh
 	${PATH_SCRIPT}/kill_ap.sh mplayer
 	${PATH_SCRIPT}/create_public.sh
-        ${PATH_SCRIPT}/my_pika-start.sh
-#	${PATH_SCRIPT}/timer_launch.sh
+        ${PATH_SCRIPT}/my_alarm.sh pika-start
         ${PATH_SCRIPT}/my_switch.sh on
 
 	at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/clear_router.sh
-#        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_random-passwd.sh
-#        at now "+${CHECK1}minutes" < ${PATH_SCRIPT}/my_pkill.sh
-	COUNT=`expr "${CHECK1}" - "10"`
-	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_pika-end.sh 
 
-        COUNT=`expr "${CHECK1}" - "1"`
+	COUNT=`expr "${CHECK1}" - "10"`
+	at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_alarm.sh pika-end 
+
+        COUNT=`expr "${CHECK1}" - "2"`
         at now "+${COUNT}minutes" < ${PATH_SCRIPT}/my_switch.sh off
 	;;
 
@@ -37,13 +35,13 @@ case $1 in
         ${PATH_SCRIPT}/kill_ap.sh mplayer
 
 	#prepare script
-        echo "${PATH_SCRIPT}/timer_erase.sh;sleep 1" > ${PATH_LOG}/temp.sh
+        echo "${PATH_SCRIPT}/my_switch.sh off ;sleep 1" > ${PATH_LOG}/temp.sh
         echo "${PATH_SCRIPT}/clear_router.sh" >> ${PATH_LOG}/temp.sh
 #	echo "${PATH_SCRIPT}/my_random-passwd.sh" >> ${PATH_LOG}/temp.sh
 #	echo "${PATH_SCRIPT}/my_pkill.sh" >> ${PATH_LOG}/temp.sh
 	echo "at now +${PERIOD}minutes < ${PATH_LOG}/temp.sh" > ${PATH_LOG}/set_end.sh
 
-        at ${START} < ${PATH_SCRIPT}/my_pika-start.sh
+        at ${START} < ${PATH_SCRIPT}/my_alarm.sh pika-start
         at ${START} < ${PATH_SCRIPT}/create_public.sh
         at ${START} < ${PATH_LOG}/set_end.sh
         at ${START} < ${PATH_SCRIPT}/timer_launch.sh
@@ -61,7 +59,7 @@ case $1 in
 	${PATH_SCRIPT}/clear_router.sh
 	${PATH_SCRIPT}/my_log.sh ${MSG}
 	echo "[${MSG}]"
-	${PATH_SCRIPT}/my_pika-end.sh
+	${PATH_SCRIPT}/my_alarm.sh pika-end
         ;;
 
        "resum")
@@ -71,7 +69,7 @@ case $1 in
         ${PATH_SCRIPT}/create_public.sh
         ${PATH_SCRIPT}/my_log.sh ${MSG}
         echo "[${MSG}]"
-	${PATH_SCRIPT}/my_pika-start.sh
+	${PATH_SCRIPT}/my_alarm.sh pika-start
         ;;
 
 

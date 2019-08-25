@@ -13,13 +13,13 @@ WIRELESSIF_1=`cat ${CONF_DIR}/WIRELESSIF_1`
 AP_NAME="temp_ap"
 
 #check for proxy
-APP_PATH="/home/linus/src/tinyproxy/bin/tinyproxy -c /etc/tinyproxy/tinyproxy.conf -d"
-c1=`pidof tinyproxy`
+#APP_PATH="/home/linus/src/tinyproxy/bin/tinyproxy -c /etc/tinyproxy/tinyproxy.conf -d"
+#c1=`pidof tinyproxy`
 #echo $c1
-if [ "$c1" == "" ];then
-  $APP_PATH
-  /home/linus/script/my_log.sh "[RESUME PROXY...]"
-fi
+#if [ "$c1" == "" ];then
+#  $APP_PATH
+#  /home/linus/script/my_log.sh "[RESUME PROXY...]"
+#fi
 
 #check for temp_ap 
 #${PATH_SCRIPT}/kill_ap.sh iwlist
@@ -56,5 +56,5 @@ check for INFERFACE
 CHECK=`ifconfig | grep "192.168.0.1"`
 if [ "$CHECK" == "" ];then
   /home/linus/script/create_public.sh
-  /home/linus/script/my_log.sh "RESUME IN INTERNET INTERFACE..."
+  /home/linus/script/my_log.sh "RESUME INTRANET INTERFACE..."
 fi

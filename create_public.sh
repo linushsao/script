@@ -4,11 +4,12 @@
 MY_ID="CREATE PUBLIC"
 
 CONF_DIR="/home/linus/conf"
+PATH_SCRIPT="/home/linus/script"
 
 #restart ethercard
 echo "[RESTART ETHER_CARD...]"
 
-/home/linus/script/create_router.sh
+/home/linus/script/create_router.sh --disable-firewall
 
 /home/linus/script/switch_proxy.sh unblock
  
@@ -16,4 +17,4 @@ echo "[RESTART ETHER_CARD...]"
 
 echo "ON" > /home/linus/log/STAT
 
-/home/linus/script/my_wireless.sh wlx74da38b92029 enp8s8 temp_ap
+${PATH_SCRIPT}/my_network.sh ap `cat ~/conf/WIRELESSIF_1` temp_ap

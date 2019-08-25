@@ -2,14 +2,14 @@
 
 PATH_SOUND="/home/linus/sound"
 case $1 in
-	"start")
+	"pika-start")
 	mplayer ${PATH_SOUND}/pika-start.mp3
 	;;
-	"end")
+	"pika-end")
         mplayer ${PATH_SOUND}/pika-end.mp3
 	;;
 	*)
-	echo "wrong param{now TIME_PERIOD / clock TIME_START TIME_STOP}"
+	echo "wrong alarm param{pika-start / pika-end }"
 	exit 0
 	;;
 esac

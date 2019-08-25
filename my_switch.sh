@@ -10,7 +10,7 @@ case $1 in
 	;;
 
        "off")
-	rm ${PATH_LOG}/TIMER
+	mv  ${PATH_LOG}/TIMER ${PATH_LOG}/TIMER_OFF
         ;;
 
 	*)

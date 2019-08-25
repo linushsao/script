@@ -6,12 +6,6 @@ MY_ID="CLEAR ROUTER"
 PATH_SCRIPT="/home/linus/script"
 PATH_LOG="/home/linus/log"
 
-#check if timer is on
-        if [ -f /home/linus/log/TIMER ]; then
-                echo "TIMER is on,can't disable network"
-                exit 0
-        fi
-
 echo "[DISABLE HAVEGED...]"
 systemctl stop haveged ;sleep 1
 
